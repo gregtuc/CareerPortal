@@ -37,19 +37,35 @@ var createRecruiterUser = function (
   password,
   recoveryanswer,
   phonenumber,
+  accounttype,
+  paymenttype,
+  paymentmethod,
+  creditcardnumber,
+  checkingnumber,
   callback
 ) {
-  console.log("made it to users");
   var newUser = {
     userId: generateUserId(),
     email: email,
     password: hashPassword(password),
     recoveryanswer: recoveryanswer,
+    paymenttype: paymenttype,
+    paymentmethod: paymentmethod,
+    creditcardnumber: creditcardnumber,
+    checkingnumber: checkingnumber,
   };
-  console.log("Made it here");
   db.query(
-    "INSERT INTO users ( userId, email, password, accountRecoveryAnswer ) values (?,?,?,?)",
-    [newUser.userId, newUser.email, newUser.password, newUser.recoveryanswer],
+    "INSERT INTO users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo) values (?,?,?,?,?,?,?,?)",
+    [
+      newUser.userId,
+      newUser.email,
+      newUser.password,
+      newUser.recoveryanswer,
+      newUser.paymenttype,
+      newUser.paymentmethod,
+      newUser.creditcardnumber,
+      newUser.checkingnumber,
+    ],
     function (err) {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
@@ -60,26 +76,21 @@ var createRecruiterUser = function (
       }
 
       // If phone number was passed, create Recruiter and then return the User.
-      if (phonenumber) {
-        db.query(
-          "INSERT INTO recruiters ( userId, phoneNo ) values (?,?)",
-          [newUser.userId, phonenumber],
-          function (err) {
-            if (err) {
-              if (err.code === "ER_DUP_ENTRY") {
-                // If we somehow generated a duplicate recruiter, try again
-                return createRecruiterUser(userId, phonenumber, callback);
-              }
-              return callback(err);
+      db.query(
+        "INSERT INTO recruiters ( userId, phoneNo, employerCategory ) values (?,?, ?)",
+        [newUser.userId, phonenumber, accounttype],
+        function (err) {
+          if (err) {
+            if (err.code === "ER_DUP_ENTRY") {
+              // If we somehow generated a duplicate recruiter, try again
+              return createRecruiterUser(userId, phonenumber, callback);
             }
-            // Successfully created recruiter. Return the User.
-            return callback(null, new User(newUser));
+            return callback(err);
           }
-        );
-      } else {
-        // If no phone number was passed just return the User.
-        return callback(null, new User(newUser));
-      }
+          // Successfully created recruiter. Return the User.
+          return callback(null, new User(newUser));
+        }
+      );
     }
   );
 };
@@ -92,6 +103,11 @@ var signup = function (
   password,
   recoveryanswer,
   phonenumber,
+  accounttype,
+  paymenttype,
+  paymentmethod,
+  creditcardnumber,
+  checkingnumber,
   callback
 ) {
   // Check if there's already a user with that email
@@ -117,9 +133,27 @@ var signup = function (
         password,
         recoveryanswer,
         phonenumber,
+        accounttype,
+        paymenttype,
+        paymentmethod,
+        creditcardnumber,
+        checkingnumber,
         callback
       );
     }
+  });
+};
+
+// List all recruiters
+// callback(err, users)
+var listMatchingRecruiters = function (userId, callback) {
+  db.query("SELECT * FROM recruiters WHERE userId = ?", [userId], function (
+    err,
+    rows
+  ) {
+    if (err) return callback(err);
+
+    return callback(null, rows);
   });
 };
 
@@ -140,6 +174,7 @@ var deleteRecruiters = function (userId, callback) {
 };
 
 exports.createRecruiterUser = createRecruiterUser;
+exports.listMatchingRecruiters = listMatchingRecruiters;
 exports.signup = signup;
 exports.listRecruiters = listRecruiters;
 exports.deleteRecruiters = deleteRecruiters;

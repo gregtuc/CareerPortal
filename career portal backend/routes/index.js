@@ -1,5 +1,5 @@
 var user = require("../models/user");
-
+var recruiter = require("../models/recruiter");
 var auth = require("../utils/auth");
 
 // Main routes for app
@@ -9,7 +9,15 @@ module.exports = function (app) {
   });
 
   app.get("/profile", auth.requireLogin, function (req, res, next) {
-    res.render("profile", { user: req.user });
+    //If user is found in the recruiters table, render the recruiters profile page.
+    recruiter.listMatchingRecruiters(req.user.userId, function (err, rows) {
+      if (rows.length) {
+        res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
+      } else {
+        //If user not found in recruiters table, render the users profile page.
+        res.render("userprofile", { user: req.user });
+      }
+    });
   });
 
   app.get("/admin", auth.requireLogin, auth.requireAdmin, function (

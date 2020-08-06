@@ -46,17 +46,32 @@ module.exports = function (passport) {
         passwordField: "password",
         recoveryAnswerField: "recoveryanswer",
         phoneNumber: "phonenumber",
+        accountType: "accounttype",
+        paymentType: "paymenttype",
+        paymentMethod: "paymentMethod",
+        creditCardNumber: "creditcardnumber",
+        checkingNumber: "checkingnumber",
         passReqToCallback: true, // Pass the entire request back to the callback
       },
       function (req, username, password, done) {
         var recoveryanswer = req.body.recoveryanswer;
         var phonenumber = req.body.phonenumber;
+        var accounttype = req.body.accounttype;
+        var paymenttype = req.body.paymenttype;
+        var paymentmethod = req.body.paymentmethod;
+        var creditcardnumber = req.body.creditcardnumber;
+        var checkingnumber = req.body.checkingnumber;
         recruiter.signup(
           req,
           username,
           password,
           recoveryanswer,
           phonenumber,
+          accounttype,
+          paymenttype,
+          paymentmethod,
+          creditcardnumber,
+          checkingnumber,
           done
         );
       }

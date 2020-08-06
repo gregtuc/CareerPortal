@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profile</title>
+    {{> recruiterhead}}
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header text-center">
+        <h1>Recruiter Profile</h1>
+        <a href="/logout" class="btn btn-info">Logout</a>
+      </div>
+
+      <div class="well">
+        <p><strong>User ID</strong>: {{ user.userId }}</p>
+        <p><strong>Email</strong>: {{ user.email }}</p>
+        <p><strong>Recovery Answer</strong>: {{ user.accountRecoveryAnswer }}</p>
+        <p><strong>Phone Number</strong>: {{ recruiter.phoneNo }}</p>
+        <p><strong>Number of Jobs Posted</strong>: {{ recruiter.jobPostedCount }}</p>
+      </div>
+    </div>
+  </body>
+</html>
