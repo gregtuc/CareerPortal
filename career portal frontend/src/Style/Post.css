@@ -1,0 +1,74 @@
+.Post {
+  max-width: 500px;
+}
+.Comment {
+  margin-bottom: 5px;
+}
+.Post-user {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+}
+
+.Home-post {
+  border: 1px solid #61dafb;
+  background-color: white;
+  margin-bottom: 10px;
+  min-height: 300px;
+  width: 500px;
+  padding: 2px;
+  display: flex;
+  padding: 16px;
+  align-items: center;
+}
+
+.Post-user-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.Post-username {
+  margin-left: 12px;
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+}
+
+.Post-image img {
+  display: block;
+  width: 100%;
+  background-color: #efefef;
+}
+
+.Post-caption {
+  padding: 16px 16px;
+  border: 3px;
+  color: black;
+}
+
+.Post-caption strong {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: bold;
+}
+
+.Post-textfield {
+  min-width: 400px;
+}
+
+.Post-comment {
+  width: 100%;
+  background-color: ghostwhite;
+}
+
+.Comment-profile {
+  width: 30px;
+  height: 30px;
+}
+
+.username {
+  color: black;
+}
+
+.Send-button {
+  float: right;
+  padding: 10px 10px 10px 10px;
+}

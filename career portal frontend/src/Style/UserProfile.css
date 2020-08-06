@@ -1,0 +1,48 @@
+.User {
+  background: #445366;
+  min-height: 100vh;
+  padding-top: 5%;
+  display: flex;
+  flex-direction: 'column';
+  align-items: 'center';
+  justify-content: 'center';
+  font-size: 'calc(10px + 2vmin)';
+  color: 'white';
+  z-index: '-1';
+}
+
+.User-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 3%;
+  background: #445366;
+  border-bottom: 1px solid white;
+}
+
+.Profile-pic {
+  width: 200px;
+}
+
+.Profile-username {
+  color: whitesmoke;
+}
+
+.Follow-number {
+  font-weight: bold;
+}
+
+.Profile-info {
+  color: whitesmoke;
+}
+
+.Profile-name {
+  color: whitesmoke;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.Posts {
+  margin: 0% 27% 0% 27%;
+}

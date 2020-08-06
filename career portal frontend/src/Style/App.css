@@ -1,0 +1,31 @@
+.App {
+  text-align: center;
+}
+
+.App-login {
+  padding: 10px;
+}
+.App-footer {
+  bottom: 0px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #61dafb;
+  padding-bottom: 1px;
+  background-color: #282c34;
+  color: white;
+}
+.App-home {
+  background-color: #282c34;
+  min-height: 100vh;
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
