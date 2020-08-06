@@ -1,4 +1,6 @@
-For Team Members:
+For Team Members
+
+In order to start up the server for the first time:
 
 1. Navigate to the project back-end directory and type "npm install" in the command line.
 2. 
