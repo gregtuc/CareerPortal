@@ -32,13 +32,21 @@ var validPassword = function (password, savedPassword) {
 
 // Create a new user
 // callback(err, newUser)
-var createUser = function (email, password, recoveryanswer, callback) {
+var createRecruiterUser = function (
+  email,
+  password,
+  recoveryanswer,
+  phonenumber,
+  callback
+) {
+  console.log("made it to users");
   var newUser = {
     userId: generateUserId(),
     email: email,
     password: hashPassword(password),
     recoveryanswer: recoveryanswer,
   };
+  console.log("Made it here");
   db.query(
     "INSERT INTO users ( userId, email, password, accountRecoveryAnswer ) values (?,?,?,?)",
     [newUser.userId, newUser.email, newUser.password, newUser.recoveryanswer],
@@ -46,20 +54,46 @@ var createUser = function (email, password, recoveryanswer, callback) {
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
           // If we somehow generated a duplicate user id, try again
-          return createUser(email, password, callback);
+          return createRecruiterUser(email, password, callback);
         }
         return callback(err);
       }
 
-      // Successfully created user
-      return callback(null, new User(newUser));
+      // If phone number was passed, create Recruiter and then return the User.
+      if (phonenumber) {
+        db.query(
+          "INSERT INTO recruiters ( userId, phoneNo ) values (?,?)",
+          [newUser.userId, phonenumber],
+          function (err) {
+            if (err) {
+              if (err.code === "ER_DUP_ENTRY") {
+                // If we somehow generated a duplicate recruiter, try again
+                return createRecruiterUser(userId, phonenumber, callback);
+              }
+              return callback(err);
+            }
+            // Successfully created recruiter. Return the User.
+            return callback(null, new User(newUser));
+          }
+        );
+      } else {
+        // If no phone number was passed just return the User.
+        return callback(null, new User(newUser));
+      }
     }
   );
 };
 
 // Check if a user exists and create them if they do not
 // callback(err, newUser)
-var signup = function (req, email, password, recoveryanswer, callback) {
+var signup = function (
+  req,
+  email,
+  password,
+  recoveryanswer,
+  phonenumber,
+  callback
+) {
   // Check if there's already a user with that email
   db.query("SELECT * FROM users WHERE email = ?", [email], function (
     err,
@@ -78,53 +112,34 @@ var signup = function (req, email, password, recoveryanswer, callback) {
       );
     } else {
       // No user exists, create the user
-      return createUser(email, password, recoveryanswer, callback);
+      return createRecruiterUser(
+        email,
+        password,
+        recoveryanswer,
+        phonenumber,
+        callback
+      );
     }
   });
 };
 
-// Log in a user
-// callback(err, user)
-var login = function (req, email, password, callback) {
-  // Check that the user logging in exists
-  db.query("SELECT * FROM users WHERE email = ?", [email], function (
-    err,
-    rows
-  ) {
-    if (err) return callback(err);
-
-    if (!rows.length)
-      return callback(null, false, req.flash("loginMessage", "No user found."));
-
-    if (!validPassword(password, rows[0].password))
-      return callback(
-        null,
-        false,
-        req.flash("loginMessage", "Wrong password.")
-      );
-
-    // User successfully logged in, return user
-    return callback(null, new User(rows[0]));
-  });
-};
-
-// List all users
+// List all recruiters
 // callback(err, users)
-var listUsers = function (callback) {
-  db.query("SELECT * FROM users", [], function (err, rows) {
+var listRecruiters = function (callback) {
+  db.query("SELECT * FROM recruiters", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
   });
 };
 
-// Delete a user
+// Delete a recruiter
 // callback(err)
-var deleteUser = function (userId, callback) {
-  db.query("DELETE FROM users WHERE userId = ?", [userId], callback);
+var deleteRecruiters = function (userId, callback) {
+  db.query("DELETE FROM recruiters WHERE userId = ?", [userId], callback);
 };
 
+exports.createRecruiterUser = createRecruiterUser;
 exports.signup = signup;
-exports.login = login;
-exports.listUsers = listUsers;
-exports.deleteUser = deleteUser;
+exports.listRecruiters = listRecruiters;
+exports.deleteRecruiters = deleteRecruiters;
