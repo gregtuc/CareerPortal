@@ -25,7 +25,7 @@ module.exports = function (app) {
                 userId: row.userId,
                 jobTitle: row.jobTitle,
                 description: row.description,
-                numberEmployeesNeed: row.numberEmployeesNeeded,
+                numberEmployeesNeeded: row.numberEmployeesNeeded,
                 datePosted: row.datePosted,
                 status: row.status,
               });
@@ -53,7 +53,7 @@ module.exports = function (app) {
       req.user.userId,
       req.body.jobTitle,
       req.body.jobDescription,
-      req.body.numemployees,
+      req.body.numberEmployeesNeeded,
       function (err) {
         if (err) {
           console.log(err);
@@ -76,7 +76,7 @@ module.exports = function (app) {
             userId: row.userId,
             jobTitle: row.jobTitle,
             description: row.description,
-            numberEmployeesNeed: row.numberEmployeesNeeded,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
           });
