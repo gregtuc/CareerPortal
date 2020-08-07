@@ -1,6 +1,7 @@
 var user = require("../models/user");
 var recruiter = require("../models/recruiter");
 var jobseeker =  require("../models/jobseeker");
+var job = require("../models/job");
 var auth = require("../utils/auth");
 
 // Main routes for app
@@ -9,17 +10,82 @@ module.exports = function (app) {
     res.render("index");
   });
 
+  //Endpoint for accessing profile. It will route you to recrutierprofile.hbs or userprofile.hbs
+  //automatically by checking the appropriate tables for your identity.
   app.get("/profile", auth.requireLogin, function (req, res, next) {
     //If user is found in the recruiters table, render the recruiters profile page.
     recruiter.listMatchingRecruiters(req.user.userId, function (err, rows) {
       if (rows.length) {
-        res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
+        //Get all of a recruiters jobs and send them as well.
+        job.listMatchingJobs(req.user.userId, function (err, rows) {
+          var jobs = [];
+          if (!err) {
+            rows.forEach(function (row) {
+              jobs.push({
+                jobId: row.jobId,
+                userId: row.userId,
+                jobTitle: row.jobTitle,
+                description: row.description,
+                numberEmployeesNeed: row.numberEmployeesNeeded,
+                datePosted: row.datePosted,
+                status: row.status,
+              });
+            });
+          }
+          res.render("recruiterprofile", {
+            user: req.user,
+            recruiter: rows[0],
+            jobs: jobs,
+          });
+        });
+        //res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
       } else {
         //If user not found in recruiters table, render the users profile page.
         jobseeker.listMatchingRecruiters(req.user.userId, function (err, rows) {
         res.render("userprofile", { user: req.user, jobseeker: rows[0] });
         });
       }
+    });
+  });
+
+  //Endpoint for creating a new job posting.
+  //TODO: Create a provision in job.createJob that verifies that the user has not exceeded
+  //their quota depending on their membership, and rejects them if they have.
+  app.post("/createjob", auth.requireLogin, function (req, res, next) {
+    job.createJob(
+      req.user.userId,
+      req.body.jobTitle,
+      req.body.jobDescription,
+      req.body.numemployees,
+      function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/profile");
+        }
+      }
+    );
+  });
+
+  //Endpoint for getting all jobs that the active user has posted, and return it as an object
+  //for the page.
+  app.post("/getJobs", auth.requireLogin, function (req, res, next) {
+    user.listMatchingJobs(userId, function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeed: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+          });
+        });
+      }
+      res.render("recruiterprofile", { user: req.user, jobs: jobs });
     });
   });
 
@@ -35,7 +101,6 @@ module.exports = function (app) {
           users.push({ userId: row.userId, email: row.email });
         });
       }
-
       res.render("admin", { user: req.user, users: users });
     });
   });
