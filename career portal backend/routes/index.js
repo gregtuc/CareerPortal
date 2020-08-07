@@ -41,7 +41,7 @@ module.exports = function (app) {
         //res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
       } else {
         //If user not found in recruiters table, render the users profile page.
-        jobseeker.listMatchingRecruiters(req.user.userId, function (err, rows) {
+        jobseeker.listMatchingJobseeker(req.user.userId, function (err, rows) {
         res.render("userprofile", { user: req.user, jobseeker: rows[0] });
         });
       }
