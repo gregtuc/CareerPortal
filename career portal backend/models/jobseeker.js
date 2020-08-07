@@ -32,11 +32,10 @@ var validPassword = function (password, savedPassword) {
 
 // Create a new user
 // callback(err, newUser)
-var createRecruiterUser = function (
+var createJobSeekerUser = function (
   email,
   password,
   recoveryanswer,
-  phonenumber,
   accounttype,
   paymenttype,
   paymentmethod,
@@ -70,23 +69,23 @@ var createRecruiterUser = function (
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
           // If we somehow generated a duplicate user id, try again
-          return createRecruiterUser(email, password, callback);
+          return createJobSeekerUser(email, password, callback);
         }
         return callback(err);
       }
-      // If phone number was passed, create Recruiter and then return the User.
+      // If phone number was passed, create JobSeeker and then return the User.
       db.query(
-        "INSERT INTO recruiters ( userId, phoneNo, employerCategory ) values (?,?, ?)",
-        [newUser.userId, phonenumber, accounttype],
+        "INSERT INTO jobseeker ( userId,category ) values (?,?)",
+        [newUser.userId, accounttype],
         function (err) {
           if (err) {
             if (err.code === "ER_DUP_ENTRY") {
-              // If we somehow generated a duplicate recruiter, try again
-              return createRecruiterUser(userId, phonenumber, callback);
+              // If we somehow generated a duplicate JobSeeker, try again
+              return createJobSeekerUser(userId, callback);
             }
             return callback(err);
           }
-          // Successfully created recruiter. Return the User.
+          // Successfully created JobSeeker. Return the User.
           return callback(null, new User(newUser));
         }
       );
@@ -101,7 +100,6 @@ var signup = function (
   email,
   password,
   recoveryanswer,
-  phonenumber,
   accounttype,
   paymenttype,
   paymentmethod,
@@ -127,11 +125,10 @@ var signup = function (
       );
     } else {
       // No user exists, create the user
-      return createRecruiterUser(
+      return createJobSeekerUser(
         email,
         password,
         recoveryanswer,
-        phonenumber,
         accounttype,
         paymenttype,
         paymentmethod,
@@ -143,10 +140,10 @@ var signup = function (
   });
 };
 
-// List all recruiters
+// List all JobSeekkers
 // callback(err, users)
-var listMatchingRecruiters = function (userId, callback) {
-  db.query("SELECT * FROM recruiters WHERE userId = ?", [userId], function (
+var listMatchingJobseeker = function (userId, callback) {
+  db.query("SELECT * FROM jobSeeker WHERE userId = ?", [userId], function (
     err,
     rows
   ) {
@@ -156,24 +153,24 @@ var listMatchingRecruiters = function (userId, callback) {
   });
 };
 
-// List all recruiters
+// List all Jobseeker
 // callback(err, users)
-var listRecruiters = function (callback) {
-  db.query("SELECT * FROM recruiters", [], function (err, rows) {
+var listJobseekers = function (callback) {
+  db.query("SELECT * FROM jobseeker", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
   });
 };
 
-// Delete a recruiter
+// Delete a jobseeker
 // callback(err)
-var deleteRecruiters = function (userId, callback) {
-  db.query("DELETE FROM recruiters WHERE userId = ?", [userId], callback);
+var deleteJobseeker = function (userId, callback) {
+  db.query("DELETE FROM jobseeker WHERE userId = ?", [userId], callback);
 };
 
-exports.createRecruiterUser = createRecruiterUser;
-exports.listMatchingRecruiters = listMatchingRecruiters;
+exports.createJobSeekerUser = createJobSeekerUser;
+exports.listMatchingJobseeker = listMatchingJobseeker;
 exports.signup = signup;
-exports.listRecruiters = listRecruiters;
-exports.deleteRecruiters = deleteRecruiters;
+exports.listJobseekers = listJobseekers;
+exports.deleteJobseeker = deleteJobseeker;

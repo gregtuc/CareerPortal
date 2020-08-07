@@ -1,5 +1,6 @@
 var user = require("../models/user");
 var recruiter = require("../models/recruiter");
+var jobseeker =  require("../models/jobseeker");
 var auth = require("../utils/auth");
 
 // Main routes for app
@@ -15,7 +16,7 @@ module.exports = function (app) {
         res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
       } else {
         //If user not found in recruiters table, render the users profile page.
-        res.render("userprofile", { user: req.user });
+        res.render("userprofile", { user: req.user, jobseeker: rows[0] });
       }
     });
   });

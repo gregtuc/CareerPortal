@@ -12,7 +12,7 @@ module.exports = function (app, passport) {
 
   app.post(
     "/usersignup",
-    passport.authenticate("local-user-signup", {
+    passport.authenticate("local-jobseeker-signup", {
       successRedirect: "/profile",
       failureRedirect: "/usersignup",
       failureFlash: true, // Allow flash messages

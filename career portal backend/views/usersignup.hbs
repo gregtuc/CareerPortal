@@ -23,8 +23,39 @@
             <input type="password" class="form-control" name="password" required>
           </div>
           <div class="form-group">
+            <label>What type of account would you like?:</label><br>
+              <input type="radio" name="accounttype" id="basic" value="Basic">
+                <label for="gold">Basic</label><br>
+                <input type="radio" name="accounttype" id="prime" value="Prime">
+                <label for="prime">Prime</label><br>
+                <input type="radio" name="accounttype" id="gold" value="Gold">
+                <label for="gold">Gold</label><br>
+          </div>
+          <div class="form-group">
+            <label>What payment method would you like to use?:</label><br>
+                <input type="radio" name="paymentmethod" id="credit" value="Credit">
+                <label for="credit">Credit</label><br>
+                <input type="radio" name="paymentmethod" id="checking" value="Checking">
+                <label for="checking">Checking</label><br>
+          </div>
+          <div class="form-group">
+            <label>Would you like to make automatic or manual payments?:</label><br>
+                <input type="radio" name="paymenttype" id="automatic" value="Automatic">
+                <label for="automatic">Automatic</label><br>
+                <input type="radio" name="paymenttype" id="manual" value="Manual">
+                <label for="manual">Manual</label><br>
+          </div>
+          <div class="form-group">
+            <label>Credit Card number (if applicable, otherwise leave empty.)</label>
+            <input type="text" class="form-control" name="creditcardnumber">
+          </div>
+          <div class="form-group">
+            <label>Checking Number (if applicable, otherwise leave empty.)</label>
+            <input type="text" class="form-control" name="checkingnumber">
+          </div>
+          <div class="form-group">
             <label>Recovery Answer <br/> (This will be used to verify your identity if you forget your password)</label>
-            <input type="text" class="form-control" name="recoveryanswer" required>
+            <input type="text" class="form-control" name="recoveryanswer" id="recoveryanswer" required>
           </div>
           <button type="submit" class="btn btn-info">Sign Up</button>
         </form>

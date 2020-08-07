@@ -3,6 +3,7 @@ var LocalStrategy = require("passport-local").Strategy;
 var db = require("../models/db");
 var user = require("../models/user");
 var recruiter = require("../models/recruiter");
+var jobseeker = require("../models/jobseeker");
 
 module.exports = function (passport) {
   // Passport session setup, required for persistent login sessions
@@ -67,6 +68,44 @@ module.exports = function (passport) {
           password,
           recoveryanswer,
           phonenumber,
+          accounttype,
+          paymenttype,
+          paymentmethod,
+          creditcardnumber,
+          checkingnumber,
+          done
+        );
+      }
+    )
+  );
+
+// Local jobseeker signup
+  passport.use(
+    "local-jobseeker-signup",
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+        recoveryAnswerField: "recoveryanswer",
+        accountType: "accounttype",
+        paymentType: "paymenttype",
+        paymentMethod: "paymentMethod",
+        creditCardNumber: "creditcardnumber",
+        checkingNumber: "checkingnumber",
+        passReqToCallback: true, // Pass the entire request back to the callback
+      },
+      function (req, username, password, done) {
+        var recoveryanswer = req.body.recoveryanswer;
+        var accounttype = req.body.accounttype;
+        var paymenttype = req.body.paymenttype;
+        var paymentmethod = req.body.paymentmethod;
+        var creditcardnumber = req.body.creditcardnumber;
+        var checkingnumber = req.body.checkingnumber;
+        jobseeker.signup(
+          req,
+          username,
+          password,
+          recoveryanswer,
           accounttype,
           paymenttype,
           paymentmethod,
