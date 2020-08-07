@@ -36,7 +36,7 @@ var createJob = function (
     numEmployees: numEmployees,
   };
   db.query(
-    "INSERT INTO jobs ( jobId, userId, jobTitle, description, numberEmployeesNeeded ) values (?,?,?,?,?)",
+    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded ) values (?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
@@ -61,7 +61,7 @@ var createJob = function (
 
 var updateRecruiterPostCount = function (newJob, callback) {
   db.query(
-    "UPDATE recruiters SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
+    "UPDATE Recruiter SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
     [newJob.userId],
     function (err) {
       if (err) {
@@ -76,7 +76,7 @@ var updateRecruiterPostCount = function (newJob, callback) {
 // List all jobs matching a specific userId
 // callback(err, users)
 var listMatchingJobs = function (userId, callback) {
-  db.query("SELECT * FROM jobs WHERE userId = ?", [userId], function (
+  db.query("SELECT * FROM jobs WHERE employerId = ?", [userId], function (
     err,
     rows
   ) {

@@ -16,10 +16,10 @@ module.exports = function (app) {
     recruiter.listMatchingRecruiters(req.user.userId, function (err, rows) {
       if (rows.length) {
         //Get all of a recruiters jobs and send them as well.
-        job.listMatchingJobs(req.user.userId, function (err, rows) {
+        job.listMatchingJobs(req.user.userId, function (err, jobrows) {
           var jobs = [];
           if (!err) {
-            rows.forEach(function (row) {
+            jobrows.forEach(function (row) {
               jobs.push({
                 jobId: row.jobId,
                 userId: row.userId,

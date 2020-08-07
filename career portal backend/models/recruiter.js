@@ -74,10 +74,9 @@ var createRecruiterUser = function (
         }
         return callback(err);
       }
-
       // If phone number was passed, create Recruiter and then return the User.
       db.query(
-        "INSERT INTO recruiters ( userId, phoneNo, employerCategory ) values (?,?, ?)",
+        "INSERT INTO Recruiter ( userId, phoneNo, employerCategory ) values (?,?,?)",
         [newUser.userId, phonenumber, accounttype],
         function (err) {
           if (err) {
@@ -147,12 +146,11 @@ var signup = function (
 // List all recruiters
 // callback(err, users)
 var listMatchingRecruiters = function (userId, callback) {
-  db.query("SELECT * FROM recruiters WHERE userId = ?", [userId], function (
+  db.query("SELECT * FROM Recruiter WHERE userId = ?", [userId], function (
     err,
     rows
   ) {
     if (err) return callback(err);
-
     return callback(null, rows);
   });
 };
@@ -160,7 +158,7 @@ var listMatchingRecruiters = function (userId, callback) {
 // List all recruiters
 // callback(err, users)
 var listRecruiters = function (callback) {
-  db.query("SELECT * FROM recruiters", [], function (err, rows) {
+  db.query("SELECT * FROM Recruiter", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -170,7 +168,7 @@ var listRecruiters = function (callback) {
 // Delete a recruiter
 // callback(err)
 var deleteRecruiters = function (userId, callback) {
-  db.query("DELETE FROM recruiters WHERE userId = ?", [userId], callback);
+  db.query("DELETE FROM Recruiter WHERE userId = ?", [userId], callback);
 };
 
 exports.createRecruiterUser = createRecruiterUser;
