@@ -92,6 +92,7 @@ module.exports = function (passport) {
         paymentMethod: "paymentMethod",
         creditCardNumber: "creditcardnumber",
         checkingNumber: "checkingnumber",
+          description: "description",
         passReqToCallback: true, // Pass the entire request back to the callback
       },
       function (req, username, password, done) {
@@ -101,6 +102,7 @@ module.exports = function (passport) {
         var paymentmethod = req.body.paymentmethod;
         var creditcardnumber = req.body.creditcardnumber;
         var checkingnumber = req.body.checkingnumber;
+        var description = req.body.description;
         jobseeker.signup(
           req,
           username,
@@ -111,6 +113,7 @@ module.exports = function (passport) {
           paymentmethod,
           creditcardnumber,
           checkingnumber,
+          description,
           done
         );
       }

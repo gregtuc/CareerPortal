@@ -41,6 +41,7 @@ var createJobSeekerUser = function (
   paymentmethod,
   creditcardnumber,
   checkingnumber,
+  description,
   callback
 ) {
   var newUser = {
@@ -73,10 +74,10 @@ var createJobSeekerUser = function (
         }
         return callback(err);
       }
-      // If phone number was passed, create JobSeeker and then return the User.
+      // Create new jobseeker.
       db.query(
-        "INSERT INTO jobseeker ( userId,category ) values (?,?)",
-        [newUser.userId, accounttype],
+        "INSERT INTO jobseeker ( userId,category,profileDescription ) values (?,?,?)",
+        [newUser.userId, accounttype,description],
         function (err) {
           if (err) {
             if (err.code === "ER_DUP_ENTRY") {
@@ -105,6 +106,7 @@ var signup = function (
   paymentmethod,
   creditcardnumber,
   checkingnumber,
+  description,
   callback
 ) {
   // Check if there's already a user with that email
@@ -134,6 +136,7 @@ var signup = function (
         paymentmethod,
         creditcardnumber,
         checkingnumber,
+        description,
         callback
       );
     }
