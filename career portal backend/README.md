@@ -8,7 +8,6 @@ In order to start up the server for the first time:
 4. Then, in MYSQL still, execute two queries (you can do this in MySQL Workbench):
    FIRST QUERY: 
       "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'
-      second: flush privileges;"
    SECOND QUERY: 
       "flush privileges;"
 5. Finally in the command line type "npm start" in the back-end project directory.
