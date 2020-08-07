@@ -8,9 +8,7 @@
     <div class="container">
       <div class="page-header text-center">
         <h1>Recruiter Profile</h1>
-        <a href="/logout" class="btn btn-info">Logout</a>
       </div>
-
       <div class="well">
         <p><strong>User ID</strong>: {{ user.userId }}</p>
         <p><strong>Email</strong>: {{ user.email }}</p>
@@ -23,6 +21,20 @@
         <p><strong>Recruiter Category</strong>: {{ recruiter.employerCategory }}</p>
         <p><strong>Number of Jobs Posted</strong>: {{ recruiter.jobPostedCount }}</p>
       </div>
+      {{#each jobs}}
+        <div class="row">
+          <div class="well">
+            <p><strong>jobId</strong>: {{ jobId }}</p>
+        <p><strong>employerId</strong>: {{ employerId }}</p>
+        <p><strong>jobTitle</strong>: {{ jobTitle }}</p>
+        <p><strong>Description</strong>: {{ description }}</p>
+        <p><strong>Number of Employees Needed</strong>: {{ numberEmployeesNeeded }}</p>
+        <p><strong>Date Posted</strong>: {{ datePosted }}</p>
+        <p><strong>Status</strong>: {{ status }}</p>
+          </div>
+        </div>
+      {{/each}}
+
     </div>
   </body>
 </html>
