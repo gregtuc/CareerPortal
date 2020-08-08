@@ -86,6 +86,20 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/action/updateStatus/:jobId/:status", auth.requireLogin,function (req,res,next){
+    job.updateStatus(
+        req.params.jobId,
+        req.params.status,
+        function (err) {
+          if (err) {
+            console.log(err);
+          }
+        }
+          )
+    res.redirect("/recruiterprofile");
+
+  });
+
   //Endpoint for creating a new job posting.
   //TODO: Create a provision in job.createJob that verifies that the user has not exceeded
   //their quota depending on their membership, and rejects them if they have.
