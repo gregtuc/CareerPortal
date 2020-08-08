@@ -85,6 +85,21 @@ var listMatchingJobs = function (userId, callback) {
   });
 };
 
+// List all jobs matching a specific userId
+// callback(err, users)
+var listJobSearched = function (userId, jobTitle, callback) {
+  db.query("SELECT * FROM jobs WHERE employerId = ? AND jobTitle = ?", [userId, jobTitle], function (
+    err,
+    rows
+  ) {
+    if (err) return callback(err);
+    return callback(null, rows);
+  });
+};
+
+
+
+
 // List all jobs
 // callback(err, jobs)
 var listJobs = function (callback) {
@@ -105,3 +120,4 @@ exports.listMatchingJobs = listMatchingJobs;
 exports.createJob = createJob;
 exports.listJobs = listJobs;
 exports.deleteJob = deleteJob;
+exports.listJobSearched = listJobSearched;

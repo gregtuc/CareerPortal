@@ -67,6 +67,30 @@ module.exports = function (app) {
     );
   });
 
+  app.post("/searchJob", auth.requireLogin, function (req, res, next) {
+    console.log(req.body)
+    job.listJobSearched(
+      req.user.userId,
+      req.body.jobTitle, function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeed: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+          });
+        });
+      }
+      console.log(jobs)
+      res.render("jobfeed", { user: req.user, jobs: jobs});
+    });
+  });
+
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.
   app.post("/getJobs", auth.requireLogin, function (req, res, next) {
