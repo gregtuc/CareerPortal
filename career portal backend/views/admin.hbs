@@ -15,18 +15,28 @@
         <thead>
           <th>User ID</th>
           <th>Email</th>
-          <th>Delete User?</th>
+          <th>Action</th>
         </thead>
         <tbody>
           {{#each users}}
           <tr>
-            <td>{{ this.id }}</td>
+            <td>{{ this.userId }}</td>
             <td>{{ this.email }}</td>
-            <td><a href="/delete/user/{{ this.id }}"><span class="glyphicon glyphicon-trash"></span></a></td>
+
+              <td>
+                  <div class="btn-group">
+                      <a href="/action/promote/{{this.userId}}"><button class="btn" type="button">Promote</button> </a>
+                      <a href="/action/demote/{{this.userId}}"><button class="btn" type="button">Demote</button> </a>
+                      <a href="/action/delete/{{this.userId}}"><button class="btn" type="button">Delete</button> </a>
+                      <a href="/action/lock/{{this.userId}}"><button class="btn" type="button">Lock</button> </a>
+                      <a href="/action/unlock/{{this.userId}}"><button class="btn" type="button">Unlock</button> </a>
+                  </div>
+              </td>
           </tr>
           {{/each}}
         </tbody>
       </table>
     </div>
+
   </body>
 </html>

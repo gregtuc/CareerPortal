@@ -4,6 +4,7 @@ var jobseeker =  require("../models/jobseeker");
 var job = require("../models/job");
 var auth = require("../utils/auth");
 
+
 // Main routes for app
 module.exports = function (app) {
   app.get("/", function (req, res, next) {
@@ -89,7 +90,7 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
+  app.get("/admin", auth.requireLogin,  function (
     req,
     res,
     next
@@ -105,11 +106,12 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/delete/user/:id", auth.requireLogin, auth.requireAdmin, function (
+  app.get("/action/delete/:userId", auth.requireLogin,  function (
     req,
     res,
     next
   ) {
+
     if (req.user.userId === req.params.userId) {
       // If the user is trying to delete their own account, log them out first
       req.logout();
@@ -122,4 +124,64 @@ module.exports = function (app) {
       res.redirect("/admin");
     });
   });
+
+
+  app.get("/action/promote/:userId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+    user.promoteUser(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/admin");
+    });
+  });
+
+  app.get("/action/demote/:userId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+    user.demoteUser(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/admin");
+    });
+  });
+
+
+  app.get("/action/lock/:userId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+    user.lock(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/admin");
+    });
+  });
+
+  app.get("/action/unlock/:userId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+    user.unlock(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/admin");
+    });
+  });
+
+
 };
