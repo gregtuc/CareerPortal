@@ -86,6 +86,17 @@ module.exports = function (app) {
     });
   });
 
+  app.post("/changeCategory", auth.requireLogin, function (req, res) {
+    jobseeker.changeCategory(req.user,req.body.accounttype, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+
+
   //Endpoint for creating a new job posting.
   //TODO: Create a provision in job.createJob that verifies that the user has not exceeded
   //their quota depending on their membership, and rejects them if they have.
@@ -228,17 +239,30 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/delete/:userId", auth.requireLogin,  function (
-    req,
-    res,
-    next
-  ) {
-
+  app.get("/action/delete/:userId", auth.requireLogin, function (req, res) {
     if (req.user.userId === req.params.userId) {
       // If the user is trying to delete their own account, log them out first
       req.logout();
     }
-
+    //If he's a prime user, delete from the list
+    jobseeker.deletePrimeUser(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      //If he's a gold user, delete from the list
+      jobseeker.deleteGoldUser(req.params.userId,function (err) {
+        if (err) {
+          console.error(err);
+        }
+      });
+      //Delete from jobseeker
+      jobseeker.deleteJobseeker(req.params.userId, function (err) {
+        if (err) {
+          console.error(err);
+        }
+      });
+    });
+    //sucessfuly delete the user
     user.deleteUser(req.params.userId, function (err) {
       if (err) {
         console.error(err);

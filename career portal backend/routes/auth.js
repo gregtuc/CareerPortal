@@ -40,7 +40,6 @@ module.exports = function (app, passport) {
       failureFlash: true, // Allow flash messages
     })
   );
-
   app.get("/logout", function (req, res, next) {
     req.logout();
     res.redirect("/");
