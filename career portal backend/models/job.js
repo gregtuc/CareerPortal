@@ -112,8 +112,8 @@ var deleteJob = function (jobId, callback) {
   db.query("DELETE FROM jobs WHERE jobId = ?", [jobId], callback);
 };
 
-var updateStatus= function (jobId,status,callback){
-  db.query("UPDATE SET status= 'Inactive' WHERE jobId=?",[jobId,status],callback);
+var updateStatus= function (jobId,callback){
+  db.query("UPDATE jobs SET status= 'Inactive' WHERE jobId=?",[jobId],callback);
 }
 
 exports.listMatchingJobs = listMatchingJobs;

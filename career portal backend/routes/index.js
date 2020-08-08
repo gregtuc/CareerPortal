@@ -86,17 +86,19 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/updateStatus/:jobId/:status", auth.requireLogin,function (req,res,next){
+  app.get("/action/updateStatus/:jobId", auth.requireLogin,function (req,res,next){
+    console.log(req);
     job.updateStatus(
         req.params.jobId,
-        req.params.status,
         function (err) {
           if (err) {
             console.log(err);
           }
+          else{
+            res.redirect("/profile");
+          }
         }
           )
-    res.redirect("/recruiterprofile");
 
   });
 
