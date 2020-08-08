@@ -161,6 +161,27 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/manage/jobs", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+    job.listJobs(function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId, employerId: row.employerId,
+            jobTitle : row.jobTitle, description : row.description,
+            numberEmployeesNeeded : row.numberEmployeesNeeded,
+            datePosted : row.datePosted, status : row.status
+          });
+        });
+      }
+      res.render("adminmanagejobs", { jobs: req.jobs, jobs: jobs });
+    });
+  });
+
   app.get("/action/delete/:userId", auth.requireLogin,  function (
     req,
     res,
