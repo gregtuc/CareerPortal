@@ -33,7 +33,7 @@ var createApplication = function (userId, jobId, title, cv, callback) {
     cv: cv,
   };
   db.query(
-    "INSERT INTO applications (applicationId, jobId, userId, title, body) values (?,?,?,?,?)",
+    "INSERT INTO applications (applicationId, jobId, userId, title, description) values (?,?,?,?,?)",
     [
       newApplication.applicationId,
       newApplication.jobId,
