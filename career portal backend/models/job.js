@@ -6,11 +6,11 @@ var Job = function (job) {
   var that = Object.create(Job.prototype);
 
   that.jobId = job.jobId;
-  that.jobId = job.jobId;
   that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
   that.numberEmployeesNeeded = job.numberEmployeesNeeded;
   that.status = job.jobStatus;
+  that.jobCategory= job.jobCategory;
   return that;
 };
 
@@ -32,6 +32,7 @@ var createJob = function (
   jobDescription,
   numberEmployeesNeeded,
   jobStatus,
+  jobCategory,
   callback
 ) {
   var newJob = {
@@ -41,9 +42,10 @@ var createJob = function (
     jobDescription: jobDescription,
     numberEmployeesNeeded: numberEmployeesNeeded,
     jobStatus: defaultStatus(),
+    jobCategory: jobCategory,
   };
   db.query(
-    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status) values (?,?,?,?,?,?)",
+    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
@@ -51,6 +53,8 @@ var createJob = function (
       newJob.jobDescription,
       newJob.numberEmployeesNeeded,
       newJob.jobStatus,
+      newJob.jobCategory,
+
     ],
     function (err) {
       if (err) {
