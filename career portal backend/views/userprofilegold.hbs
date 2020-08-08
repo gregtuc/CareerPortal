@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Profile</title>
     {{> userhead}}
-  </head>
-  <body>
-    <div class="container">
-      <div class="page-header text-center">
-        <h1>User Profile</h1>
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1>Gold User Profile</h1>
         <a href="/logout" class="btn btn-info">Logout</a>
-      </div>
+    </div>
 
-      <div class="well">
+    <div class="well">
         <p><strong>User ID</strong>: {{ user.userId }}</p>
+        <p><strong>Gold user since</strong>: {{ gold.signUpDate }}</p>
         <p><strong>Email</strong>: {{ user.email }}</p>
         <p><strong>Payment Type</strong>: {{ user.autoOrManual }}</p>
         <p><strong>Payment Method</strong>: {{ user.paymentMethod }}</p>
         <p><strong>Credit Number</strong>: {{ user.creditNo }}</p>
         <p><strong>Checking Number</strong>: {{ user.checkingNo }}</p>
-          <p><strong>Monthly fee</strong>: {{ user.monthlyFee }}</p>
-          <p><strong>Account Balance</strong>: {{ user.accountBalance }}</p>
+        <p><strong>Monthly fee</strong>: {{ user.monthlyFee }}</p>
+        <p><strong>Account Balance</strong>: {{ user.accountBalance }}</p>
         <p><strong>Recovery Answer</strong>: {{ user.accountRecoveryAnswer }}</p>
         <p><strong>Job Seeker Category</strong>: {{ jobseeker.category }}</p>
-          <p><strong>About me</strong>: {{ jobseeker.profileDescription }}</p>
-      </div>
+        <p><strong>About me</strong>: {{ jobseeker.profileDescription }}</p>
     </div>
-  </body>
+</div>
+</body>
 </html>
