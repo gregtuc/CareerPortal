@@ -50,25 +50,25 @@ module.exports = function (app) {
           //Check if user is a PrimeUser
           jobseeker.listMatchingPrimeUser(req.user.userId, function (
             err,
-            rows
+            prime
           ) {
-            if (rows.length) {
+            if (prime.length) {
               res.render("userprofileprime", {
                 user: req.user,
                 jobseeker: userRows[0],
-                prime: rows[0],
+                prime: prime[0],
               });
             } else {
               //if not a prime user,check if user is a GoldUser
               jobseeker.listMatchingGoldUser(req.user.userId, function (
                 err,
-                rows
+                gold
               ) {
-                if (rows.length) {
+                if (gold.length) {
                   res.render("userprofilegold", {
                     user: req.user,
                     jobseeker: userRows[0],
-                    gold: rows[0],
+                    gold: gold[0],
                   });
                 } else {
                   //If not a gold and prime user, render basic user profile
@@ -93,6 +93,19 @@ module.exports = function (app) {
     next
   ) {
     job.updateStatus(req.params.jobId, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  app.post("/changeCategoryRecruiter", auth.requireLogin, function (req, res) {
+    if(req.body.accounttype==="Gold")
+      var newfee = 100;
+    else
+      var newfee=50;
+    recruiter.changeCategory(req.user, req.body.accounttype,newfee, function (err, rows) {
       if (err) {
         console.log(err);
       } else {
