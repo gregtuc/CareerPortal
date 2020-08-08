@@ -7,9 +7,9 @@ var Job = function (job) {
 
   that.jobId = job.jobId;
   that.jobId = job.jobId;
-  that.jobTitle = job.jobtitle;
+  that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
-  that.numberApplicants = job.numberApplicants;
+  that.numberEmployeesNeeded= job.numberEmployeesNeeded;
 
   return that;
 };
@@ -25,7 +25,7 @@ var createJob = function (
   userId,
   jobTitle,
   jobDescription,
-  numEmployees,
+  numberEmployeesNeeded,
   callback
 ) {
   var newJob = {
@@ -33,16 +33,16 @@ var createJob = function (
     userId: userId,
     jobTitle: jobTitle,
     jobDescription: jobDescription,
-    numEmployees: numEmployees,
+    numberEmployeesNeeded: numberEmployeesNeeded,
   };
   db.query(
-    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded ) values (?,?,?,?,?)",
+    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded) values (?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
       newJob.jobTitle,
       newJob.jobDescription,
-      newJob.numEmployees,
+      newJob.numberEmployeesNeeded,
     ],
     function (err) {
       if (err) {

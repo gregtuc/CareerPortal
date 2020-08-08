@@ -26,7 +26,7 @@ module.exports = function (app) {
                 userId: row.userId,
                 jobTitle: row.jobTitle,
                 description: row.description,
-                numberEmployeesNeed: row.numberEmployeesNeeded,
+                numberEmployeesNeeded: row.numberEmployeesNeeded,
                 datePosted: row.datePosted,
                 status: row.status,
               });
@@ -41,11 +41,26 @@ module.exports = function (app) {
         //res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
       } else {
         //If user not found in recruiters table, render the users profile page.
-        jobseeker.listMatchingJobseeker(req.user.userId, function (err, rows) {
-        res.render("userprofile", { user: req.user, jobseeker: rows[0] });
+        jobseeker.listMatchingJobseeker(req.user.userId, function (err, userRows) {
+          //Check if user is a PrimeUser
+          jobseeker.listMatchingPrimeUser(req.user.userId, function (err, rows) {
+            if (rows.length) {
+              res.render("userprofileprime", {user: req.user, jobseeker: userRows[0], prime: rows[0]});
+            } else {
+              //if not a prime user,check if user is a GoldUser
+              jobseeker.listMatchingGoldUser(req.user.userId, function (err, rows) {
+                if (rows.length) {
+                  res.render("userprofilegold", {user: req.user, jobseeker: userRows[0], gold: rows[0]});
+                } else {
+                  //If not a gold and prime user, render basic user profile
+                  res.render("userprofile", {user: req.user, jobseeker: userRows[0]});
+                }
+              });
+            }
+          });
         });
       }
-    });
+    })
   });
 
   //Endpoint for creating a new job posting.
@@ -56,7 +71,7 @@ module.exports = function (app) {
       req.user.userId,
       req.body.jobTitle,
       req.body.jobDescription,
-      req.body.numemployees,
+      req.body.numberEmployeesNeeded,
       function (err) {
         if (err) {
           console.log(err);
@@ -103,47 +118,47 @@ module.exports = function (app) {
             userId: row.userId,
             jobTitle: row.jobTitle,
             description: row.description,
-            numberEmployeesNeed: row.numberEmployeesNeeded,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
           });
         });
-      }
-      res.render("recruiterprofile", { user: req.user, jobs: jobs });
+        }
+        res.render("recruiterprofile", {user: req.user, jobs: jobs});
+      });
     });
-  });
 
-  app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
-    req,
-    res,
-    next
-  ) {
-    user.listUsers(function (err, rows) {
-      var users = [];
-      if (!err) {
-        rows.forEach(function (row) {
-          users.push({ userId: row.userId, email: row.email });
-        });
-      }
-      res.render("admin", { user: req.user, users: users });
+    app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
+        req,
+        res,
+        next
+    ) {
+      user.listUsers(function (err, rows) {
+        var users = [];
+        if (!err) {
+          rows.forEach(function (row) {
+            users.push({userId: row.userId, email: row.email});
+          });
+        }
+        res.render("admin", {user: req.user, users: users});
+      });
     });
-  });
 
-  app.get("/delete/user/:id", auth.requireLogin, auth.requireAdmin, function (
-    req,
-    res,
-    next
-  ) {
-    if (req.user.userId === req.params.userId) {
-      // If the user is trying to delete their own account, log them out first
-      req.logout();
-    }
-
-    user.deleteUser(req.params.userId, function (err) {
-      if (err) {
-        console.error(err);
+    app.get("/delete/user/:id", auth.requireLogin, auth.requireAdmin, function (
+        req,
+        res,
+        next
+    ) {
+      if (req.user.userId === req.params.userId) {
+        // If the user is trying to delete their own account, log them out first
+        req.logout();
       }
-      res.redirect("/admin");
+
+      user.deleteUser(req.params.userId, function (err) {
+        if (err) {
+          console.error(err);
+        }
+        res.redirect("/admin");
+      });
     });
-  });
-};
+  }
