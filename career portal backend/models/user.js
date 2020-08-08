@@ -102,6 +102,12 @@ var login = function (req, email, password, callback) {
         false,
         req.flash("loginMessage", "Wrong password.")
       );
+    if (rows[0].frozen)
+      return callback(
+          null,
+          false,
+          req.flash("loginMessage", "Your account is frozen. Please contact an administrator")
+      );
 
     // User successfully logged in, return user
     return callback(null, new User(rows[0]));
