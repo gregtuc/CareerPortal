@@ -3,6 +3,8 @@ var recruiter = require("../models/recruiter");
 var jobseeker = require("../models/jobseeker");
 var job = require("../models/job");
 var auth = require("../utils/auth");
+var applications = require("../models/applications");
+const { application } = require("express");
 
 
 // Main routes for app
@@ -120,6 +122,29 @@ module.exports = function (app) {
         });
       }
       res.render("jobfeed", { user: req.user, jobs: jobs });
+    });
+  });
+
+  //Endpoint for getting all jobs that the active user has posted, and return it as an object
+  //for the page.
+  app.post("/getAllJobs", auth.requireLogin, function (req, res, next) {
+    job.listJobs(function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        console.log(rows);
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+          });
+        });
+      }
+      res.render("explorepage", { user: req.user, jobs: jobs });
     });
   });
 
@@ -257,6 +282,22 @@ module.exports = function (app) {
       }
       res.redirect("/admin");
     });
+  });
+
+
+  app.post("/createApplication", auth.requireLogin, function (req, res, next) {
+    applications.createApplication(
+      req.user.userId,
+      req.body.title,
+      req.body.body,
+      function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/profile");
+        }
+      }
+    );
   });
 
 

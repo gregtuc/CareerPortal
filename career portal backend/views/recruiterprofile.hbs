@@ -10,6 +10,7 @@
         <h1>Recruiter Profile</h1>
       </div>
       <div class="well">
+        <h2>Recruiter Information</h2>
         <p><strong>User ID</strong>: {{ user.userId }}</p>
         <p><strong>Email</strong>: {{ user.email }}</p>
         <p><strong>Payment Type</strong>: {{ user.autoOrManual }}</p>
@@ -21,6 +22,8 @@
         <p><strong>Recruiter Category</strong>: {{ recruiter.employerCategory }}</p>
         <p><strong>Number of Jobs Posted</strong>: {{ recruiter.jobPostedCount }}</p>
       </div>
+      <div class="well">
+        <h2>Recruiter Job Posted</h2>
       {{#each jobs}}
         <div class="row">
           <div class="well">
@@ -34,7 +37,24 @@
           </div>
         </div>
       {{/each}}
+      </div>
 
+      <div class="well">
+        <h2>Jobseekers Application</h2>
+      {{#each applications}}
+        <div class="row">
+          <div class="well">
+            <p><strong>Application Id</strong>: {{ applicationId }}</p>
+            <p><strong>jobId</strong>: {{ jobId }}</p>
+            <p><strong>userId</strong>: {{ userId }}</p>
+            <p><strong>Title</strong>: {{ title }}</p>
+            <p><strong>Body</strong>: {{ body }}</p>
+            <p><strong>Status</strong>: {{ status }}</p>
+            <p><strong>Date Posted</strong>: {{ dateSent }}</p>
+          </div>
+        </div>
+      {{/each}}
+      </div>
     </div>
   </body>
 </html>

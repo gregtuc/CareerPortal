@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Profile</title>
+    <title>Explore Page</title>
     {{> userhead}}
   </head>
   <body>
     <div class="container">
       <div class="page-header text-center">
-        <h1>Job Feed</h1>
+        <h1>Explore Page</h1>
       </div>
       {{#each jobs}}
         <div class="row">
@@ -19,7 +19,6 @@
             <p><strong>Number of Employees Needed</strong>: {{ numberEmployeesNeeded }}</p>
             <p><strong>Date Posted</strong>: {{ datePosted }}</p>
             <p><strong>Status</strong>: {{ status }}</p>
-            {{> applicationhead}}
           </div>
         </div>
       {{/each}}
