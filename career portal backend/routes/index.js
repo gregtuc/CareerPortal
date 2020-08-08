@@ -1,6 +1,6 @@
 var user = require("../models/user");
 var recruiter = require("../models/recruiter");
-var jobseeker =  require("../models/jobseeker");
+var jobseeker = require("../models/jobseeker");
 var job = require("../models/job");
 var auth = require("../utils/auth");
 
@@ -41,26 +41,46 @@ module.exports = function (app) {
         //res.render("recruiterprofile", { user: req.user, recruiter: rows[0] });
       } else {
         //If user not found in recruiters table, render the users profile page.
-        jobseeker.listMatchingJobseeker(req.user.userId, function (err, userRows) {
+        jobseeker.listMatchingJobseeker(req.user.userId, function (
+          err,
+          userRows
+        ) {
           //Check if user is a PrimeUser
-          jobseeker.listMatchingPrimeUser(req.user.userId, function (err, rows) {
+          jobseeker.listMatchingPrimeUser(req.user.userId, function (
+            err,
+            rows
+          ) {
             if (rows.length) {
-              res.render("userprofileprime", {user: req.user, jobseeker: userRows[0], prime: rows[0]});
+              res.render("userprofileprime", {
+                user: req.user,
+                jobseeker: userRows[0],
+                prime: rows[0],
+              });
             } else {
               //if not a prime user,check if user is a GoldUser
-              jobseeker.listMatchingGoldUser(req.user.userId, function (err, rows) {
+              jobseeker.listMatchingGoldUser(req.user.userId, function (
+                err,
+                rows
+              ) {
                 if (rows.length) {
-                  res.render("userprofilegold", {user: req.user, jobseeker: userRows[0], gold: rows[0]});
+                  res.render("userprofilegold", {
+                    user: req.user,
+                    jobseeker: userRows[0],
+                    gold: rows[0],
+                  });
                 } else {
                   //If not a gold and prime user, render basic user profile
-                  res.render("userprofile", {user: req.user, jobseeker: userRows[0]});
+                  res.render("userprofile", {
+                    user: req.user,
+                    jobseeker: userRows[0],
+                  });
                 }
               });
             }
           });
         });
       }
-    })
+    });
   });
 
   //Endpoint for creating a new job posting.
@@ -83,10 +103,7 @@ module.exports = function (app) {
   });
 
   app.post("/searchJob", auth.requireLogin, function (req, res, next) {
-    console.log(req.body)
-    job.listJobSearched(
-      req.user.userId,
-      req.body.jobTitle, function (err, rows) {
+    job.listJobSearched(req.body.jobTitle, function (err, rows) {
       var jobs = [];
       if (!err) {
         rows.forEach(function (row) {
@@ -101,8 +118,7 @@ module.exports = function (app) {
           });
         });
       }
-      console.log(jobs)
-      res.render("jobfeed", { user: req.user, jobs: jobs});
+      res.render("jobfeed", { user: req.user, jobs: jobs });
     });
   });
 
@@ -123,42 +139,42 @@ module.exports = function (app) {
             status: row.status,
           });
         });
-        }
-        res.render("recruiterprofile", {user: req.user, jobs: jobs});
-      });
-    });
-
-    app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
-        req,
-        res,
-        next
-    ) {
-      user.listUsers(function (err, rows) {
-        var users = [];
-        if (!err) {
-          rows.forEach(function (row) {
-            users.push({userId: row.userId, email: row.email});
-          });
-        }
-        res.render("admin", {user: req.user, users: users});
-      });
-    });
-
-    app.get("/delete/user/:id", auth.requireLogin, auth.requireAdmin, function (
-        req,
-        res,
-        next
-    ) {
-      if (req.user.userId === req.params.userId) {
-        // If the user is trying to delete their own account, log them out first
-        req.logout();
       }
-
-      user.deleteUser(req.params.userId, function (err) {
-        if (err) {
-          console.error(err);
-        }
-        res.redirect("/admin");
-      });
+      res.render("recruiterprofile", { user: req.user, jobs: jobs });
     });
-  }
+  });
+
+  app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
+    req,
+    res,
+    next
+  ) {
+    user.listUsers(function (err, rows) {
+      var users = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          users.push({ userId: row.userId, email: row.email });
+        });
+      }
+      res.render("admin", { user: req.user, users: users });
+    });
+  });
+
+  app.get("/delete/user/:id", auth.requireLogin, auth.requireAdmin, function (
+    req,
+    res,
+    next
+  ) {
+    if (req.user.userId === req.params.userId) {
+      // If the user is trying to delete their own account, log them out first
+      req.logout();
+    }
+
+    user.deleteUser(req.params.userId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/admin");
+    });
+  });
+};
