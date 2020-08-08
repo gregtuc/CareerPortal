@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Administration</title>
+    {{> head}}
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1>Job Administration</h1>
+        <a href="/logout" class="btn btn-info">Logout</a>
+        <a href="/admin" class="btn btn-info">Manage Users</a>
+    </div>
+    <p></p>
+    <table class="table table-striped table-hover">
+        <thead>
+        <th>Job ID</th>
+        <th>Employer ID</th>
+        <th>Job Title</th>
+        <th>Description</th>
+        <th>Number of Employees Needed</th>
+        <th>Date Posted</th>
+        <th>Status</th>
+
+        </thead>
+        <tbody>
+        {{#each jobs}}
+        <tr>
+            <td>{{ this.jobId }}</td>
+            <td>{{ this.employerId }}</td>
+            <td>{{ this.jobTitle }}</td>
+            <td>{{ this.description }}</td>
+            <td>{{ this.numberEmployeesNeeded }}</td>
+            <td>{{ this.datePosted }}</td>
+            <td>{{ this.status }}</td>
+
+            <td>
+                <div class="btn-group">
+                    <a href="/admin"><button class="btn" type="button">Delete</button> </a>
+
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+            </tbody>
+            </table>
+            </div>
+
+
+            </body>
+</html>
