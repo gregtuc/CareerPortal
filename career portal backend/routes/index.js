@@ -330,6 +330,44 @@ module.exports = function (app) {
     }
   );
 
+  app.get("/viewapplications", auth.requireLogin, function (req, res, next) {
+    applications.listMatchingApplications(req.user.userId , function (err, rows) {
+      var applications = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          applications.push({
+            applicationId: row.applicationId,
+            jobId: row.jobId,
+            userId: row.userId,
+            title: row.title,
+            body: row.body,
+            status: row.status,
+            dateSent: row.dateSent,
+          });
+        });
+      }
+      res.render("viewapplications", {
+        applications: req.applications,
+        jobs: applications,
+      });
+    });
+  });
+
+  app.get(
+      "/action/withdrawapplication/:applicationId",
+      auth.requireLogin,
+      function (req, res, next) {
+        applications.deleteApplication(req.params.applicationId, function (err) {
+          if (err) {
+            console.error(err);
+          }
+          res.redirect("/viewapplications");
+        });
+      }
+  );
+
+
+
   app.post("/createApplication", auth.requireLogin, function (req, res, next) {
     applications.createApplication(
       req.user.userId,
