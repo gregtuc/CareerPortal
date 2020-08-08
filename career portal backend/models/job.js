@@ -9,7 +9,7 @@ var Job = function (job) {
   that.jobId = job.jobId;
   that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
-  that.numberEmployeesNeeded= job.numberEmployeesNeeded;
+  that.numberEmployeesNeeded = job.numberEmployeesNeeded;
 
   return that;
 };
@@ -87,8 +87,9 @@ var listMatchingJobs = function (userId, callback) {
 
 // List all jobs matching a specific userId
 // callback(err, users)
-var listJobSearched = function (userId, jobTitle, callback) {
-  db.query("SELECT * FROM jobs WHERE employerId = ? AND jobTitle = ?", [userId, jobTitle], function (
+// TODO: Factor in the category section for this search
+var listJobSearched = function (jobTitle, callback) {
+  db.query("SELECT * FROM jobs WHERE jobTitle = ?", [jobTitle], function (
     err,
     rows
   ) {
@@ -96,9 +97,6 @@ var listJobSearched = function (userId, jobTitle, callback) {
     return callback(null, rows);
   });
 };
-
-
-
 
 // List all jobs
 // callback(err, jobs)
