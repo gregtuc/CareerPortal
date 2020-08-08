@@ -57,6 +57,7 @@ module.exports = function (app) {
       req.body.jobTitle,
       req.body.jobDescription,
       req.body.numberEmployeesNeeded,
+      req.body.status,
       function (err) {
         if (err) {
           console.log(err);
@@ -81,7 +82,7 @@ module.exports = function (app) {
             description: row.description,
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
-            status: row.status,
+            jobStatus: row.status,
           });
         });
       }

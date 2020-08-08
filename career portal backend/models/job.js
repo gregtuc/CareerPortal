@@ -10,14 +10,21 @@ var Job = function (job) {
   that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
   that.numberEmployeesNeeded= job.numberEmployeesNeeded;
-
+  that.status= job.jobStatus;
   return that;
 };
+
+// sets default active status for a new job created
+var defaultStatus = function (){
+  return jobStatus = "Active";
+} ;
 
 // Gets a random id for this job
 var generateJobId = function () {
   return uuidV4();
 };
+
+
 
 // Create a new job
 // callback(err, newJob)
@@ -26,6 +33,7 @@ var createJob = function (
   jobTitle,
   jobDescription,
   numberEmployeesNeeded,
+  jobStatus,
   callback
 ) {
   var newJob = {
@@ -34,15 +42,18 @@ var createJob = function (
     jobTitle: jobTitle,
     jobDescription: jobDescription,
     numberEmployeesNeeded: numberEmployeesNeeded,
+    jobStatus: defaultStatus(),
+
   };
   db.query(
-    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded) values (?,?,?,?,?)",
+    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status) values (?,?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
       newJob.jobTitle,
       newJob.jobDescription,
       newJob.numberEmployeesNeeded,
+        newJob.jobStatus,
     ],
     function (err) {
       if (err) {
