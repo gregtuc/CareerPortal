@@ -6,7 +6,6 @@ var auth = require("../utils/auth");
 var applications = require("../models/applications");
 const { application } = require("express");
 
-
 // Main routes for app
 module.exports = function (app) {
   app.get("/", function (req, res, next) {
@@ -86,20 +85,18 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/updateStatus/:jobId", auth.requireLogin,function (req,res,next){
-    console.log(req);
-    job.updateStatus(
-        req.params.jobId,
-        function (err) {
-          if (err) {
-            console.log(err);
-          }
-          else{
-            res.redirect("/profile");
-          }
-        }
-          )
-
+  app.get("/action/updateStatus/:jobId", auth.requireLogin, function (
+    req,
+    res,
+    next
+  ) {
+    job.updateStatus(req.params.jobId, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
   });
 
   //Endpoint for creating a new job posting.
@@ -148,7 +145,6 @@ module.exports = function (app) {
     job.listJobs(function (err, rows) {
       var jobs = [];
       if (!err) {
-        console.log(rows);
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
@@ -187,11 +183,7 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/admin", auth.requireLogin,  function (
-    req,
-    res,
-    next
-  ) {
+  app.get("/admin", auth.requireLogin, function (req, res, next) {
     user.listUsers(function (err, rows) {
       var users = [];
       if (!err) {
@@ -203,20 +195,19 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/manage/jobs", auth.requireLogin,  function (
-      req,
-      res,
-      next
-  ) {
+  app.get("/manage/jobs", auth.requireLogin, function (req, res, next) {
     job.listJobs(function (err, rows) {
       var jobs = [];
       if (!err) {
         rows.forEach(function (row) {
           jobs.push({
-            jobId: row.jobId, employerId: row.employerId,
-            jobTitle : row.jobTitle, description : row.description,
-            numberEmployeesNeeded : row.numberEmployeesNeeded,
-            datePosted : row.datePosted, status : row.status
+            jobId: row.jobId,
+            employerId: row.employerId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
           });
         });
       }
@@ -224,32 +215,34 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/manage/applications", auth.requireLogin,  function (
-      req,
-      res,
-      next
-  ) {
+  app.get("/manage/applications", auth.requireLogin, function (req, res, next) {
     applications.listApplications(function (err, rows) {
       var applications = [];
       if (!err) {
         rows.forEach(function (row) {
           applications.push({
-            applicationId: row.applicationId, jobId: row.jobId,
-            userId : row.userId, title : row.title,
-            body : row.body, status : row.status, dateSent : row.dateSent
+            applicationId: row.applicationId,
+            jobId: row.jobId,
+            userId: row.userId,
+            title: row.title,
+            body: row.body,
+            status: row.status,
+            dateSent: row.dateSent,
           });
         });
       }
-      res.render("adminmanageapplications", { applications: req.applications, jobs: applications });
+      res.render("adminmanageapplications", {
+        applications: req.applications,
+        jobs: applications,
+      });
     });
   });
 
-  app.get("/action/delete/:userId", auth.requireLogin,  function (
+  app.get("/action/delete/:userId", auth.requireLogin, function (
     req,
     res,
     next
   ) {
-
     if (req.user.userId === req.params.userId) {
       // If the user is trying to delete their own account, log them out first
       req.logout();
@@ -263,13 +256,11 @@ module.exports = function (app) {
     });
   });
 
-
-  app.get("/action/promote/:userId", auth.requireLogin,  function (
-      req,
-      res,
-      next
+  app.get("/action/promote/:userId", auth.requireLogin, function (
+    req,
+    res,
+    next
   ) {
-
     user.promoteUser(req.params.userId, function (err) {
       if (err) {
         console.error(err);
@@ -278,12 +269,11 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/demote/:userId", auth.requireLogin,  function (
-      req,
-      res,
-      next
+  app.get("/action/demote/:userId", auth.requireLogin, function (
+    req,
+    res,
+    next
   ) {
-
     user.demoteUser(req.params.userId, function (err) {
       if (err) {
         console.error(err);
@@ -292,13 +282,7 @@ module.exports = function (app) {
     });
   });
 
-
-  app.get("/action/lock/:userId", auth.requireLogin,  function (
-      req,
-      res,
-      next
-  ) {
-
+  app.get("/action/lock/:userId", auth.requireLogin, function (req, res, next) {
     user.lock(req.params.userId, function (err) {
       if (err) {
         console.error(err);
@@ -307,12 +291,11 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/unlock/:userId", auth.requireLogin,  function (
-      req,
-      res,
-      next
+  app.get("/action/unlock/:userId", auth.requireLogin, function (
+    req,
+    res,
+    next
   ) {
-
     user.unlock(req.params.userId, function (err) {
       if (err) {
         console.error(err);
@@ -321,14 +304,11 @@ module.exports = function (app) {
     });
   });
 
-
-  app.get("/action/deletejob/:jobId", auth.requireLogin,  function (
-      req,
-      res,
-      next
+  app.get("/action/deletejob/:jobId", auth.requireLogin, function (
+    req,
+    res,
+    next
   ) {
-
-
     job.deleteJob(req.params.jobId, function (err) {
       if (err) {
         console.error(err);
@@ -337,27 +317,25 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/deleteapplications/:applicationId", auth.requireLogin,  function (
-      req,
-      res,
-      next
-  ) {
-
-
-    applications.deleteApplication(req.params.applicationId, function (err) {
-      if (err) {
-        console.error(err);
-      }
-      res.redirect("/manage/applications");
-    });
-  });
-
+  app.get(
+    "/action/deleteapplications/:applicationId",
+    auth.requireLogin,
+    function (req, res, next) {
+      applications.deleteApplication(req.params.applicationId, function (err) {
+        if (err) {
+          console.error(err);
+        }
+        res.redirect("/manage/applications");
+      });
+    }
+  );
 
   app.post("/createApplication", auth.requireLogin, function (req, res, next) {
     applications.createApplication(
       req.user.userId,
+      req.body.jobId,
       req.body.title,
-      req.body.body,
+      req.body.cv,
       function (err) {
         if (err) {
           console.log(err);
@@ -367,6 +345,4 @@ module.exports = function (app) {
       }
     );
   });
-
-
 };
