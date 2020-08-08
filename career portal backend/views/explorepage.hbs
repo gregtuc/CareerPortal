@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Explore Page</title>
+    {{> userhead}}
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header text-center">
+        <h1>Explore Page</h1>
+      </div>
+      {{#each jobs}}
+        <div class="row">
+          <div class="well">
+            <p><strong>Job Id</strong>: {{ jobId }}</p>
+            <p><strong>employerId</strong>: {{ employerId }}</p>
+            <p><strong>Job Title</strong>: {{ jobTitle }}</p>
+            <p><strong>Description</strong>: {{ description }}</p>
+            <p><strong>Number of Employees Needed</strong>: {{ numberEmployeesNeeded }}</p>
+            <p><strong>Date Posted</strong>: {{ datePosted }}</p>
+            <p><strong>Status</strong>: {{ status }}</p>
+          </div>
+        </div>
+      {{/each}}
+
+    </div>
+  </body>
+</html>

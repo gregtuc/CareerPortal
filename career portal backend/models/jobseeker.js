@@ -55,7 +55,7 @@ var createJobSeekerUser = function (
     checkingnumber: checkingnumber,
   };
   db.query(
-    "INSERT INTO users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo) values (?,?,?,?,?,?,?,?)",
+    "INSERT INTO users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo,monthlyFee,accountBalance) values (?,?,?,?,?,?,?,?,0,0)",
     [
       newUser.userId,
       newUser.email,
@@ -86,12 +86,50 @@ var createJobSeekerUser = function (
             }
             return callback(err);
           }
-          // Successfully created JobSeeker. Return the User.
-          return callback(null, new User(newUser));
+          // If the job seeker is a prime user, create new prime user.
+          if(accounttype==="Prime")
+          {
+              console.log("Creating prime Category");
+              db.query(
+                  "INSERT INTO PrimeUser ( userId ) values (?)",
+                  [newUser.userId],
+                  function (err) {
+                      if (err) {
+                          if (err.code === "ER_DUP_ENTRY") {
+                              // If we somehow generated a duplicate PrimeUser, try again
+                              return createJobSeekerUser(userId, callback);
+                          }
+                          return callback(err);
+                      }
+                      updateMonthlyFee(newUser,accounttype,callback);
+                      // Successfully created JobSeeker as prime user. Return the User.
+                      return callback(null, new User(newUser));
+                  });
         }
-      );
-    }
-  );
+          else if(accounttype==="Gold")
+          {
+            db.query(
+                "INSERT INTO GoldUser ( userId ) values (?)",
+                [newUser.userId],
+                function (err) {
+                  if (err) {
+                    if (err.code === "ER_DUP_ENTRY") {
+                      // If we somehow generated a duplicate JobSeeker, try again
+                      return createJobSeekerUser(userId, callback);
+                    }
+                    return callback(err);
+                  }
+                  // Successfully created JobSeeker as Gold user. Return the User.
+                    updateMonthlyFee(newUser,accounttype,callback);
+                  return callback(null, new User(newUser));
+                });
+          }
+          else
+          {
+            return callback(null, new User(newUser));
+          }
+      });
+    });
 };
 
 // Check if a user exists and create them if they do not
@@ -142,8 +180,49 @@ var signup = function (
     }
   });
 };
-
-// List all JobSeekkers
+var updateMonthlyFee = function(newUser,category,callback){
+    console.log("Checking Category");
+if(category === "Prime") {
+    console.log("Prime Category");
+    db.query(
+        "UPDATE users SET monthlyFee = 10 WHERE userId= ?",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and accountblance
+            return callback(null,new User(newUser));
+        });
+}
+else if (category==="Gold"){
+    console.log("Gold Category");
+    db.query(
+        "UPDATE users SET monthlyFee = 20 WHERE userId= ?",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and accountblance
+            return callback(null,new User(newUser));
+        });
+}
+else{
+    console.log("Basic Category");
+    db.query(
+        "UPDATE users SET monthlyFee = 0 WHERE userId= ?",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and accountblance
+            return callback(null,new User(newUser));
+        });
+}
+}
+// List matching JobSeekkers
 // callback(err, users)
 var listMatchingJobseeker = function (userId, callback) {
   db.query("SELECT * FROM jobSeeker WHERE userId = ?", [userId], function (
@@ -154,6 +233,32 @@ var listMatchingJobseeker = function (userId, callback) {
 
     return callback(null, rows);
   });
+};
+
+// List matching PrimeUser
+// callback(err, users)
+var listMatchingPrimeUser = function (userId, callback) {
+    db.query("SELECT * FROM PrimeUser WHERE userId = ?", [userId], function (
+        err,
+        rows
+    ) {
+        if (err) return callback(err);
+
+        return callback(null, rows);
+    });
+};
+
+// List matching PrimeUser
+// callback(err, users)
+var listMatchingGoldUser = function (userId, callback) {
+    db.query("SELECT * FROM GoldUser WHERE userId = ?", [userId], function (
+        err,
+        rows
+    ) {
+        if (err) return callback(err);
+
+        return callback(null, rows);
+    });
 };
 
 // List all Jobseeker
@@ -174,6 +279,8 @@ var deleteJobseeker = function (userId, callback) {
 
 exports.createJobSeekerUser = createJobSeekerUser;
 exports.listMatchingJobseeker = listMatchingJobseeker;
+exports.listMatchingGoldUser = listMatchingGoldUser;
+exports.listMatchingPrimeUser = listMatchingPrimeUser;
 exports.signup = signup;
 exports.listJobseekers = listJobseekers;
 exports.deleteJobseeker = deleteJobseeker;

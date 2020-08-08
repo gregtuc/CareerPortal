@@ -121,10 +121,35 @@ var listUsers = function (callback) {
 // Delete a user
 // callback(err)
 var deleteUser = function (userId, callback) {
+  console.log(userId);
   db.query("DELETE FROM users WHERE userId = ?", [userId], callback);
+};
+
+var promoteUser = function (userId, callback) {
+  console.log(userId);
+  db.query("UPDATE recruiter SET admin = 1 WHERE userId = ?", [userId], callback);
+};
+
+var demoteUser = function (userId, callback) {
+  console.log(userId);
+  db.query("UPDATE recruiter SET admin = 0 WHERE userId = ?", [userId], callback);
+};
+
+var lock = function (userId, callback) {
+  console.log(userId);
+  db.query("UPDATE users SET frozen = 1 WHERE userId = ?", [userId], callback);
+};
+
+var unlock = function (userId, callback) {
+  console.log(userId);
+  db.query("UPDATE users SET frozen = 0 WHERE userId = ?", [userId], callback);
 };
 
 exports.signup = signup;
 exports.login = login;
 exports.listUsers = listUsers;
 exports.deleteUser = deleteUser;
+exports.promoteUser = promoteUser;
+exports.demoteUser = demoteUser;
+exports.lock = lock;
+exports.unlock = unlock;
