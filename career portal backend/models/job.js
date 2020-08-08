@@ -9,22 +9,20 @@ var Job = function (job) {
   that.jobId = job.jobId;
   that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
-  that.numberEmployeesNeeded= job.numberEmployeesNeeded;
-  that.status= job.jobStatus;
+  that.numberEmployeesNeeded = job.numberEmployeesNeeded;
+  that.status = job.jobStatus;
   return that;
 };
 
 // sets default active status for a new job created
-var defaultStatus = function (){
-  return jobStatus = "Active";
-} ;
+var defaultStatus = function () {
+  return (jobStatus = "Active");
+};
 
 // Gets a random id for this job
 var generateJobId = function () {
   return uuidV4();
 };
-
-
 
 // Create a new job
 // callback(err, newJob)
@@ -43,7 +41,6 @@ var createJob = function (
     jobDescription: jobDescription,
     numberEmployeesNeeded: numberEmployeesNeeded,
     jobStatus: defaultStatus(),
-
   };
   db.query(
     "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status) values (?,?,?,?,?,?)",
@@ -53,7 +50,7 @@ var createJob = function (
       newJob.jobTitle,
       newJob.jobDescription,
       newJob.numberEmployeesNeeded,
-        newJob.jobStatus,
+      newJob.jobStatus,
     ],
     function (err) {
       if (err) {
@@ -86,6 +83,18 @@ var updateRecruiterPostCount = function (newJob, callback) {
 
 // List all jobs matching a specific userId
 // callback(err, users)
+var listJobSearched = function (jobTitle, callback) {
+  db.query("SELECT * FROM jobs WHERE jobTitle = ?", [jobTitle], function (
+    err,
+    rows
+  ) {
+    if (err) return callback(err);
+    return callback(null, rows);
+  });
+};
+
+// List all jobs matching a specific userId
+// callback(err, users)
 var listMatchingJobs = function (userId, callback) {
   db.query("SELECT * FROM jobs WHERE employerId = ?", [userId], function (
     err,
@@ -112,7 +121,17 @@ var deleteJob = function (jobId, callback) {
   db.query("DELETE FROM jobs WHERE jobId = ?", [jobId], callback);
 };
 
+var updateStatus = function (jobId, callback) {
+  db.query(
+    "UPDATE jobs SET status= 'Inactive' WHERE jobId=?",
+    [jobId],
+    callback
+  );
+};
+
+exports.listJobSearched = listJobSearched;
 exports.listMatchingJobs = listMatchingJobs;
 exports.createJob = createJob;
 exports.listJobs = listJobs;
 exports.deleteJob = deleteJob;
+exports.updateStatus = updateStatus;

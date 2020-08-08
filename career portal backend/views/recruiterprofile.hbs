@@ -34,6 +34,7 @@
             <p><strong>Number of Employees Needed</strong>: {{ numberEmployeesNeeded }}</p>
             <p><strong>Date Posted</strong>: {{ datePosted }}</p>
             <p><strong>Status</strong>: {{ status }}</p>
+              <td><a href="/action/updateStatus/{{this.jobId}}">Change Status to Inactive<span class="glyphicon glyphicon-trash"></span></a></td>
           </div>
         </div>
       {{/each}}
