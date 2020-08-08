@@ -31,6 +31,7 @@ module.exports = function (app) {
                 numberEmployeesNeeded: row.numberEmployeesNeeded,
                 datePosted: row.datePosted,
                 status: row.status,
+                jobCategory:row.jobCategory,
               });
             });
           }
@@ -109,6 +110,7 @@ module.exports = function (app) {
       req.body.jobDescription,
       req.body.numberEmployeesNeeded,
       req.body.status,
+      req.body.jobCategory,
       function (err) {
         if (err) {
           console.log(err);
@@ -132,6 +134,7 @@ module.exports = function (app) {
             numberEmployeesNeed: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory:row.jobCategory,
           });
         });
       }
@@ -154,6 +157,7 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
@@ -176,6 +180,7 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             jobStatus: row.status,
+            jobCategory:row.jobCategory,
           });
         });
       }
@@ -208,6 +213,7 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
