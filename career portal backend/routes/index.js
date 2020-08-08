@@ -207,6 +207,26 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/manage/applications", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+    applications.listApplications(function (err, rows) {
+      var applications = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          applications.push({
+            applicationId: row.applicationId, jobId: row.jobId,
+            userId : row.userId, title : row.title,
+            body : row.body, status : row.status, dateSent : row.dateSent
+          });
+        });
+      }
+      res.render("adminmanageapplications", { applications: req.applications, jobs: applications });
+    });
+  });
+
   app.get("/action/delete/:userId", auth.requireLogin,  function (
     req,
     res,
@@ -281,6 +301,37 @@ module.exports = function (app) {
         console.error(err);
       }
       res.redirect("/admin");
+    });
+  });
+
+
+  app.get("/action/deletejob/:jobId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+
+    job.deleteJob(req.params.jobId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/manage/jobs");
+    });
+  });
+
+  app.get("/action/deleteapplications/:applicationId", auth.requireLogin,  function (
+      req,
+      res,
+      next
+  ) {
+
+
+    applications.deleteApplication(req.params.applicationId, function (err) {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/manage/applications");
     });
   });
 

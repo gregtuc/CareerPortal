@@ -10,6 +10,7 @@
         <h1>Job Administration</h1>
         <a href="/logout" class="btn btn-info">Logout</a>
         <a href="/admin" class="btn btn-info">Manage Users</a>
+        <a href="/manage/applications" class="btn btn-info">Manage Applications</a>
     </div>
     <p></p>
     <table class="table table-striped table-hover">
@@ -36,7 +37,7 @@
 
             <td>
                 <div class="btn-group">
-                    <a href="/admin"><button class="btn" type="button">Delete</button> </a>
+                    <a href="/action/deletejob/{{this.jobId}}"><button class="btn" type="button">Delete</button> </a>
 
                 </div>
             </td>
