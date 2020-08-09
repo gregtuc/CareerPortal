@@ -180,10 +180,50 @@ var signup = function (
     }
   });
 };
+
+//User will change is category base on what he chose
+var changeCategory = function(user,category,fee,callback) {
+    db.query(
+        "UPDATE JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
+        [fee,category,user.userId,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and account balance
+            return callback(null,new User(user));
+        });
+}
+
+var addGoldUser = function (userId,callback){
+    db.query(
+        "INSERT INTO GoldUser ( userId ) values (?)",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully created JobSeeker as Gold user. Return the User.
+            return callback(null, new User(newUser));
+        });
+}
+
+var addPrimeUser = function (userId,callback){
+    db.query(
+        "INSERT INTO PrimeUser ( userId ) values (?)",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully created JobSeeker as Gold user. Return the User.
+            return callback(null, new User(newUser));
+        });
+}
+
+
 var updateMonthlyFee = function(newUser,category,callback){
-    console.log("Checking Category");
 if(category === "Prime") {
-    console.log("Prime Category");
     db.query(
         "UPDATE users SET monthlyFee = 10 WHERE userId= ?",
         [newUser.userId],
@@ -225,7 +265,7 @@ else{
 // List matching JobSeekkers
 // callback(err, users)
 var listMatchingJobseeker = function (userId, callback) {
-  db.query("SELECT * FROM jobSeeker WHERE userId = ?", [userId], function (
+  db.query("SELECT * FROM JobSeeker WHERE userId = ?", [userId], function (
     err,
     rows
   ) {
@@ -238,7 +278,7 @@ var listMatchingJobseeker = function (userId, callback) {
 // List matching PrimeUser
 // callback(err, users)
 var listMatchingPrimeUser = function (userId, callback) {
-    db.query("SELECT * FROM PrimeUser WHERE userId = ?", [userId], function (
+    db.query("SELECT * FROM MyDatabase.PrimeUser WHERE userId = ?", [userId], function (
         err,
         rows
     ) {
@@ -251,7 +291,7 @@ var listMatchingPrimeUser = function (userId, callback) {
 // List matching PrimeUser
 // callback(err, users)
 var listMatchingGoldUser = function (userId, callback) {
-    db.query("SELECT * FROM GoldUser WHERE userId = ?", [userId], function (
+    db.query("SELECT * FROM MyDatabase.GoldUser WHERE userId = ?", [userId], function (
         err,
         rows
     ) {
@@ -264,9 +304,8 @@ var listMatchingGoldUser = function (userId, callback) {
 // List all Jobseeker
 // callback(err, users)
 var listJobseekers = function (callback) {
-  db.query("SELECT * FROM jobseeker", [], function (err, rows) {
+  db.query("SELECT * FROM MyDatabase.JobSeeker", [], function (err, rows) {
     if (err) return callback(err);
-
     return callback(null, rows);
   });
 };
@@ -274,8 +313,29 @@ var listJobseekers = function (callback) {
 // Delete a jobseeker
 // callback(err)
 var deleteJobseeker = function (userId, callback) {
-  db.query("DELETE FROM jobseeker WHERE userId = ?", [userId], callback);
+        db.query("DELETE FROM JobSeeker WHERE userId = ?",
+            [userId],
+            function (err) {
+            if (err) return callback(err);
+            return callback(null);
+        });
 };
+
+var deletePrimeUser= function (userId, callback) {
+    db.query("DELETE FROM PrimeUser WHERE userId = ?", [userId], function (err) {
+        if (err) return callback(err);
+
+        return callback(null);
+    });
+};
+var deleteGoldUser= function (userId, callback) {
+    db.query("DELETE FROM GoldUser WHERE userId = ?", [userId],function (err) {
+        if (err) return callback(err);
+
+        return callback(null);
+    });
+};
+
 
 exports.createJobSeekerUser = createJobSeekerUser;
 exports.listMatchingJobseeker = listMatchingJobseeker;
@@ -284,3 +344,7 @@ exports.listMatchingPrimeUser = listMatchingPrimeUser;
 exports.signup = signup;
 exports.listJobseekers = listJobseekers;
 exports.deleteJobseeker = deleteJobseeker;
+exports.changeCategory = changeCategory;
+exports.deletePrimeUser = deletePrimeUser;
+exports.deleteGoldUser = deleteGoldUser;
+exports.addGoldUser = addGoldUser;

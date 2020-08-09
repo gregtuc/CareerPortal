@@ -45,31 +45,31 @@ module.exports = function (app) {
       } else {
         //If user not found in recruiters table, render the users profile page.
         jobseeker.listMatchingJobseeker(req.user.userId, function (
-          err,
-          userRows
+            err,
+            userRows
         ) {
           //Check if user is a PrimeUser
           jobseeker.listMatchingPrimeUser(req.user.userId, function (
-            err,
-            rows
+              err,
+              prime
           ) {
-            if (rows.length) {
+            if (prime.length) {
               res.render("userprofileprime", {
                 user: req.user,
                 jobseeker: userRows[0],
-                prime: rows[0],
+                prime: prime[0],
               });
             } else {
               //if not a prime user,check if user is a GoldUser
               jobseeker.listMatchingGoldUser(req.user.userId, function (
-                err,
-                rows
+                  err,
+                  gold
               ) {
-                if (rows.length) {
+                if (gold.length) {
                   res.render("userprofilegold", {
                     user: req.user,
                     jobseeker: userRows[0],
-                    gold: rows[0],
+                    gold: gold[0],
                   });
                 } else {
                   //If not a gold and prime user, render basic user profile
@@ -86,12 +86,42 @@ module.exports = function (app) {
     });
   });
 
+
   app.get("/action/updateStatus/:jobId", auth.requireLogin, function (
-    req,
-    res,
-    next
+      req,
+      res,
+      next
   ) {
     job.updateStatus(req.params.jobId, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  app.post("/changeCategory", auth.requireLogin, function (req, res) {
+    if (req.body.accounttype === "Gold")
+      var newfee = 20;
+    else if (req.body.accounttype === "Prime")
+      var newfee = 10;
+    else
+      var newfee = 0;
+    jobseeker.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+
+  app.post("/changeCategoryRecruiter", auth.requireLogin, function (req, res) {
+    if (req.body.accounttype === "Gold")
+      var newfee = 100;
+    else
+      var newfee = 50;
+    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
       if (err) {
         console.log(err);
       } else {
@@ -117,7 +147,6 @@ module.exports = function (app) {
         } else {
           res.redirect("/profile");
         }
-      }
     );
   });
 
@@ -138,7 +167,7 @@ module.exports = function (app) {
           });
         });
       }
-      res.render("jobfeed", { user: req.user, jobs: jobs });
+      res.render("jobfeed", {user: req.user, jobs: jobs});
     });
   });
 
@@ -184,7 +213,7 @@ module.exports = function (app) {
           });
         });
       }
-      res.render("explorepage", { user: req.user, jobs: jobs });
+      res.render("explorepage", {user: req.user, jobs: jobs});
     });
   });
 
@@ -207,7 +236,7 @@ module.exports = function (app) {
           });
         });
       }
-      res.render("recruiterprofile", { user: req.user, jobs: jobs });
+      res.render("recruiterprofile", {user: req.user, jobs: jobs});
     });
   });
 
@@ -216,10 +245,10 @@ module.exports = function (app) {
       var users = [];
       if (!err) {
         rows.forEach(function (row) {
-          users.push({ userId: row.userId, email: row.email });
+          users.push({userId: row.userId, email: row.email});
         });
       }
-      res.render("admin", { user: req.user, users: users });
+      res.render("admin", {user: req.user, users: users});
     });
   });
 
@@ -240,7 +269,7 @@ module.exports = function (app) {
           });
         });
       }
-      res.render("adminmanagejobs", { jobs: req.jobs, jobs: jobs });
+      res.render("adminmanagejobs", {jobs: req.jobs, jobs: jobs});
     });
   });
 
@@ -268,21 +297,21 @@ module.exports = function (app) {
   });
 
   app.get("/action/delete/:userId", auth.requireLogin, function (
-    req,
-    res,
-    next
+      req,
+      res,
+      next
   ) {
     if (req.user.userId === req.params.userId) {
       // If the user is trying to delete their own account, log them out first
       req.logout();
     }
-
+    //sucessfuly delete the user
     user.deleteUser(req.params.userId, function (err) {
       if (err) {
         console.error(err);
       }
-      res.redirect("/admin");
-    });
+        res.redirect("/admin");
+      });
   });
 
   app.get("/action/promote/:userId", auth.requireLogin, function (

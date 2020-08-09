@@ -8,7 +8,6 @@
 <div class="container">
     <div class="page-header text-center">
         <h1>Prime User Profile</h1>
-        <a href="/logout" class="btn btn-info">Logout</a>
     </div>
 
     <div class="well">
@@ -25,6 +24,41 @@
         <p><strong>Job Seeker Category</strong>: {{ jobseeker.category }}</p>
         <p><strong>Number of jobs applied</strong>: {{ prime.numberOfJobsApplied }}</p>
         <p><strong>About me</strong>: {{ jobseeker.profileDescription }}</p>
+        <td>
+            <!-- Trigger the modal with a button -->
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#categoryModal">Change Category</button>
+
+            <!-- Modal -->
+            <div id="categoryModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Choose Category</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/changeCategory" method="post">
+                                <div class="form-group">
+                                    <label>What type of account would you like?:</label><br>
+                                    <input type="radio" name="accounttype" id="basic" value="Basic">
+                                    <label for="basic">Basic</label><br>
+                                    <input type="radio" name="accounttype" id="prime" value="Prime">
+                                    <label for="prime">Prime</label><br>
+                                    <input type="radio" name="accounttype" id="gold" value="Gold">
+                                    <label for="gold">Gold</label><br>
+                                </div>
+                                <button type="submit" class="btn btn-info">Change</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td><a href="/action/delete/{{ user.userId }}">Delete profile<span class="glyphicon glyphicon-trash"></span></a></td>
     </div>
 </div>
 </body>
