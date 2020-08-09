@@ -268,7 +268,11 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/admin", auth.requireLogin, function (req, res, next) {
+  app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
+    req,
+    res,
+    next
+  ) {
     user.listUsers(function (err, rows) {
       var users = [];
       if (!err) {

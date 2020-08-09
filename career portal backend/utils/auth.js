@@ -1,3 +1,4 @@
+var recruiter = require("../models/recruiter");
 // Route middleware to make sure a user is logged in
 var requireLogin = function (req, res, next) {
   // If user is authenticated in the session, carry on
@@ -17,13 +18,15 @@ var alreadyLoggedIn = function (req, res, next) {
 // Route middleware to make sure a user is an admin
 var requireAdmin = function (req, res, next) {
   if (req.user) {
-    if (req.user.admin) {
-      // If user is an admin, carry on
-      return next();
-    } else {
-      // If they aren't, send them to their profile
-      res.redirect("/profile");
-    }
+    recruiter.checkRecruiterAdmin(req.user.userId, function (err, rows) {
+      if (rows.length) {
+        // If user is an admin, carry on
+        return next();
+      } else {
+        // If they aren't, send them to their profile
+        res.redirect("/profile");
+      }
+    });
   } else {
     // Ask user to log in
     res.redirect("/login");
