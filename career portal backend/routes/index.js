@@ -100,8 +100,8 @@ module.exports = function (app) {
     });
   });
 
-
-
+//Editing part for the users
+//changing the user's category
   app.post("/changeCategory", auth.requireLogin, function (req, res) {
     if (req.body.accounttype === "Gold") var newfee = 20;
     else if (req.body.accounttype === "Prime") var newfee = 10;
@@ -117,14 +117,11 @@ module.exports = function (app) {
       }
     });
   });
-
+//changing the recruiter's category
   app.post("/changeCategoryRecruiter", auth.requireLogin, function (req, res) {
     if (req.body.accounttype === "Gold") var newfee = 100;
     else var newfee = 50;
-    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (
-      err,
-      rows
-    ) {
+    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
       if (err) {
         console.log(err);
       } else {
@@ -132,6 +129,28 @@ module.exports = function (app) {
       }
     });
   });
+//changing user's payment type
+  app.post("/changePaymentType", auth.requireLogin, function (req, res) {
+
+    jobseeker.changePaymentType(req.user, req.body.paymenttype, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  //changing user's payment method
+  app.post("/changePaymentMethod", auth.requireLogin, function (req, res) {
+    jobseeker.changePaymentMethod(req.user, req.body.paymentmethod, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+
 
   //Endpoint for creating a new job posting.
   //TODO: Create a provision in job.createJob that verifies that the user has not exceeded

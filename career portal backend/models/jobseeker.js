@@ -194,6 +194,32 @@ var changeCategory = function(user,category,fee,callback) {
             return callback(null,new User(user));
         });
 }
+//User will change is category base on what he chose
+var changePaymentType = function(user,type,callback) {
+    db.query(
+        "UPDATE  users SET autoOrManual= ? WHERE userId= ?",
+        [type,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and account balance
+            return callback(null,new User(user));
+        });
+}
+//User will change is category base on what he chose
+var changePaymentMethod = function(user,method,callback) {
+    db.query(
+        "UPDATE  users SET paymentMethod= ? WHERE userId= ?",
+        [method,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and account balance
+            return callback(null,new User(user));
+        });
+}
 
 var addGoldUser = function (userId,callback){
     db.query(
@@ -348,3 +374,5 @@ exports.changeCategory = changeCategory;
 exports.deletePrimeUser = deletePrimeUser;
 exports.deleteGoldUser = deleteGoldUser;
 exports.addGoldUser = addGoldUser;
+exports.changePaymentType = changePaymentType;
+exports.changePaymentMethod = changePaymentMethod;
