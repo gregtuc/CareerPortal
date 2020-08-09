@@ -10,7 +10,7 @@ var Job = function (job) {
   that.jobDescription = job.description;
   that.numberEmployeesNeeded = job.numberEmployeesNeeded;
   that.status = job.jobStatus;
-  that.jobCategory= job.jobCategory;
+  that.jobCategory = job.jobCategory;
   return that;
 };
 
@@ -45,7 +45,7 @@ var createJob = function (
     jobCategory: jobCategory,
   };
   db.query(
-    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
+    "INSERT INTO MyDatabase.jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
@@ -54,7 +54,6 @@ var createJob = function (
       newJob.numberEmployeesNeeded,
       newJob.jobStatus,
       newJob.jobCategory,
-
     ],
     function (err) {
       if (err) {
@@ -73,7 +72,7 @@ var createJob = function (
 
 var updateRecruiterPostCount = function (newJob, callback) {
   db.query(
-    "UPDATE Recruiter SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
+    "UPDATE MyDatabase.Recruiter SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
     [newJob.userId],
     function (err) {
       if (err) {
@@ -88,43 +87,44 @@ var updateRecruiterPostCount = function (newJob, callback) {
 // List all jobs matching a specific userId
 // callback(err, users)
 var listJobSearched = function (jobTitle, callback) {
-  db.query("SELECT * FROM jobs WHERE jobTitle = ?", [jobTitle], function (
-    err,
-    rows
-  ) {
-    if (err) return callback(err);
-    return callback(null, rows);
-  });
+  db.query(
+    "SELECT * FROM MyDatabase.jobs WHERE jobTitle = ?",
+    [jobTitle],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
-var listJobSearchedByCategory = function(jobCategory, callback){
-  db.query("SELECT * FROM jobs WHERE jobCategory = ?", [jobCategory], function (
-    err,
-    rows
-  ){
-    if (err) return callback(err);
-    return callback(null, rows);
-  });
+var listJobSearchedByCategory = function (jobCategory, callback) {
+  db.query(
+    "SELECT * FROM MyDatabase.jobs WHERE jobCategory = ?",
+    [jobCategory],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
 // List all jobs matching a specific userId
 // callback(err, users)
 var listMatchingJobs = function (userId, callback) {
-  db.query("SELECT * FROM jobs WHERE employerId = ?", [userId], function (
-    err,
-    rows
-  ) {
-    if (err) return callback(err);
-    return callback(null, rows);
-  });
+  db.query(
+    "SELECT * FROM MyDatabase.jobs WHERE employerId = ?",
+    [userId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
-
-
 
 // List all jobs
 // callback(err, jobs)
 var listJobs = function (callback) {
-  db.query("SELECT * FROM jobs", [], function (err, rows) {
+  db.query("SELECT * FROM MyDatabase.jobs", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -134,12 +134,12 @@ var listJobs = function (callback) {
 // Delete a job
 // callback(err)
 var deleteJob = function (jobId, callback) {
-  db.query("DELETE FROM jobs WHERE jobId = ?", [jobId], callback);
+  db.query("DELETE FROM jobs WHERE MyDatabase.jobId = ?", [jobId], callback);
 };
 
 var updateStatus = function (jobId, callback) {
   db.query(
-    "UPDATE jobs SET status= 'Inactive' WHERE jobId=?",
+    "UPDATE jobs SET status= 'Inactive' WHERE MyDatabase.jobId=?",
     [jobId],
     callback
   );
@@ -151,4 +151,4 @@ exports.createJob = createJob;
 exports.listJobs = listJobs;
 exports.deleteJob = deleteJob;
 exports.updateStatus = updateStatus;
-exports.listJobSearchedByCategory= listJobSearchedByCategory;
+exports.listJobSearchedByCategory = listJobSearchedByCategory;
