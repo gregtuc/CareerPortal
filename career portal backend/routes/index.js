@@ -209,7 +209,7 @@ module.exports = function (app) {
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
-            userId: row.userId,
+            employerId: row.employerId,
             jobTitle: row.jobTitle,
             description: row.description,
             numberEmployeesNeed: row.numberEmployeesNeeded,
@@ -234,7 +234,7 @@ module.exports = function (app) {
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
-            userId: row.userId,
+            employerId: row.employerId,
             jobTitle: row.jobTitle,
             description: row.description,
             numberEmployeesNeed: row.numberEmployeesNeeded,
@@ -257,7 +257,7 @@ module.exports = function (app) {
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
-            userId: row.userId,
+            employerId: row.employerId,
             jobTitle: row.jobTitle,
             description: row.description,
             numberEmployeesNeeded: row.numberEmployeesNeeded,
@@ -278,7 +278,7 @@ module.exports = function (app) {
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
-            userId: row.userId,
+            employerId: row.employerId,
             jobTitle: row.jobTitle,
             description: row.description,
             numberEmployeesNeeded: row.numberEmployeesNeeded,
@@ -302,7 +302,7 @@ module.exports = function (app) {
         rows.forEach(function (row) {
           jobs.push({
             jobId: row.jobId,
-            userId: row.userId,
+            userId: row.employerId,
             jobTitle: row.jobTitle,
             description: row.description,
             numberEmployeesNeeded: row.numberEmployeesNeeded,

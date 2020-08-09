@@ -22,7 +22,6 @@
         <th>Status</th>
         <th>Date Sent</th>
         <th>Action</th>
-
         </thead>
         <tbody>
         {{#each jobs}}
@@ -34,7 +33,6 @@
                 <td>{{ this.body }}</td>
                 <td>{{ this.status }}</td>
                 <td>{{ this.dateSent }}</td>
-
                 <td>
                     <div class="btn-group">
                         <a href="/action/withdrawapplication/{{this.applicationId}}/{{this.userId}}"><button class="btn" type="button">Withdraw</button> </a>
