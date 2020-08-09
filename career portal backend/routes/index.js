@@ -4,6 +4,7 @@ var jobseeker = require("../models/jobseeker");
 var job = require("../models/job");
 var auth = require("../utils/auth");
 var applications = require("../models/applications");
+var systeminfo = require("../models/systeminfo");
 const { application } = require("express");
 
 // Main routes for app
@@ -49,28 +50,28 @@ module.exports = function (app) {
           userRows
         ) {
           //Check if user is a PrimeUser
-            if (userRows[0].category==="Prime") {
-              res.render("userprofileprime", {
+          if (userRows[0].category === "Prime") {
+            res.render("userprofileprime", {
+              user: req.user,
+              jobseeker: userRows[0],
+            });
+          } else {
+            //if not a prime user,check if user is a GoldUser
+            if (userRows[0].category === "Gold") {
+              res.render("userprofilegold", {
                 user: req.user,
                 jobseeker: userRows[0],
               });
             } else {
-              //if not a prime user,check if user is a GoldUser
-                if (userRows[0].category==="Gold") {
-                  res.render("userprofilegold", {
-                    user: req.user,
-                    jobseeker: userRows[0],
-                  });
-                } else {
-                  //If not a gold and prime user, render basic user profile
-                  res.render("userprofile", {
-                    user: req.user,
-                    jobseeker: userRows[0],
-                  });
-                }
-              }
-          });
-        }
+              //If not a gold and prime user, render basic user profile
+              res.render("userprofile", {
+                user: req.user,
+                jobseeker: userRows[0],
+              });
+            }
+          }
+        });
+      }
     });
   });
 
@@ -79,7 +80,7 @@ module.exports = function (app) {
     res,
     next
   ) {
-    job.updateStatus(req.params.jobId,req.params.status, function (err) {
+    job.updateStatus(req.params.jobId, req.params.status, function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -88,8 +89,8 @@ module.exports = function (app) {
     });
   });
 
-//Editing part for the users
-//changing the user's category
+  //Editing part for the users
+  //changing the user's category
   app.post("/changeCategory", auth.requireLogin, function (req, res) {
     if (req.body.accounttype === "Gold") var newfee = 20;
     else if (req.body.accounttype === "Prime") var newfee = 10;
@@ -105,11 +106,14 @@ module.exports = function (app) {
       }
     });
   });
-//changing the recruiter's category
+  //changing the recruiter's category
   app.post("/changeCategoryRecruiter", auth.requireLogin, function (req, res) {
     if (req.body.accounttype === "Gold") var newfee = 100;
     else var newfee = 50;
-    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
+    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -117,10 +121,12 @@ module.exports = function (app) {
       }
     });
   });
-//changing user's payment type
+  //changing user's payment type
   app.post("/changePaymentType", auth.requireLogin, function (req, res) {
-
-    jobseeker.changePaymentType(req.user, req.body.paymenttype, function (err, rows) {
+    jobseeker.changePaymentType(req.user, req.body.paymenttype, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -130,7 +136,10 @@ module.exports = function (app) {
   });
   //changing user's payment method
   app.post("/changePaymentMethod", auth.requireLogin, function (req, res) {
-    jobseeker.changePaymentMethod(req.user, req.body.paymentmethod, function (err, rows) {
+    jobseeker.changePaymentMethod(req.user, req.body.paymentmethod, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -140,7 +149,10 @@ module.exports = function (app) {
   });
   //changing user's credit number
   app.post("/changeCreditNumber", auth.requireLogin, function (req, res) {
-    jobseeker.changeCreditNb(req.user, req.body.creditcardnumber, function (err, rows) {
+    jobseeker.changeCreditNb(req.user, req.body.creditcardnumber, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -150,7 +162,10 @@ module.exports = function (app) {
   });
   //changing user's checking number
   app.post("/changeCheckingNumber", auth.requireLogin, function (req, res) {
-    jobseeker.changeCheckingNb(req.user, req.body.checkingnumber, function (err, rows) {
+    jobseeker.changeCheckingNb(req.user, req.body.checkingnumber, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -160,7 +175,10 @@ module.exports = function (app) {
   });
   //changing user's recovery answer
   app.post("/changeRecoveryAnswer", auth.requireLogin, function (req, res) {
-    jobseeker.changeRecoveryAnswer(req.user, req.body.recoveryanswer, function (err, rows) {
+    jobseeker.changeRecoveryAnswer(req.user, req.body.recoveryanswer, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -171,7 +189,10 @@ module.exports = function (app) {
 
   //user's payment
   app.post("/userPayment", auth.requireLogin, function (req, res) {
-    jobseeker.userPayment(req.user, req.body.paymentammount, function (err, rows) {
+    jobseeker.userPayment(req.user, req.body.paymentammount, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -179,7 +200,6 @@ module.exports = function (app) {
       }
     });
   });
-
 
   //Endpoint for creating a new job posting.
   //TODO: Create a provision in job.createJob that verifies that the user has not exceeded
@@ -291,7 +311,6 @@ module.exports = function (app) {
       res.render("viewjoblistings", { user: req.user, jobs: jobs });
     });
   });
-
 
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.
@@ -495,7 +514,7 @@ module.exports = function (app) {
   });
 
   app.get("/viewsubmissions", auth.requireLogin, function (req, res, next) {
-    applications.listSubmissions(req.user.userId , function (err, rows) {
+    applications.listSubmissions(req.user.userId, function (err, rows) {
       var applications = [];
       if (!err) {
         rows.forEach(function (row) {
@@ -521,60 +540,72 @@ module.exports = function (app) {
     "/action/withdrawapplication/:applicationId/:userId",
     auth.requireLogin,
     function (req, res, next) {
-      applications.deleteApplication(req.params.applicationId,req.params.userId, function (err) {
+      applications.deleteApplication(
+        req.params.applicationId,
+        req.params.userId,
+        function (err) {
+          if (err) {
+            console.error(err);
+          }
+          res.redirect("/viewapplications");
+        }
+      );
+    }
+  );
+
+  app.get(
+    "/action/declineapplication/:applicationId",
+    auth.requireLogin,
+    function (req, res, next) {
+      applications.declineApplication(req.params.applicationId, function (err) {
         if (err) {
           console.error(err);
         }
-        res.redirect("/viewapplications");
+        res.redirect("/viewsubmissions");
       });
     }
   );
 
   app.get(
-      "/action/declineapplication/:applicationId",
-      auth.requireLogin,
-      function (req, res, next) {
-        applications.declineApplication(req.params.applicationId, function (err) {
-          if (err) {
-            console.error(err);
-          }
-          res.redirect("/viewsubmissions");
-        });
-      }
-  );
-
-  app.get("/action/acceptapplication/:applicationId", auth.requireLogin, function (req, res, next) {
-    var newCount;
-    var jobId;
-    applications.getApplications(req.params.applicationId, function (
+    "/action/acceptapplication/:applicationId",
+    auth.requireLogin,
+    function (req, res, next) {
+      var newCount;
+      var jobId;
+      applications.getApplications(req.params.applicationId, function (
         err,
         rows
-    ) {
-      newCount = rows[0].numberEmployeesNeeded - 1;
-      jobId = rows[0].jobId;
-      if(newCount == 0){
-        applications.takeSpot(jobId,function(err,rows) {
-          applications.offerSent(req.params.applicationId,function(err,rows) {
-            applications.declineOthers(req.params.applicationId, jobId,function(err,rows) {
-
-
+      ) {
+        newCount = rows[0].numberEmployeesNeeded - 1;
+        jobId = rows[0].jobId;
+        if (newCount == 0) {
+          applications.takeSpot(jobId, function (err, rows) {
+            applications.offerSent(req.params.applicationId, function (
+              err,
+              rows
+            ) {
+              applications.declineOthers(
+                req.params.applicationId,
+                jobId,
+                function (err, rows) {
+                  res.redirect("/viewsubmissions");
+                }
+              );
+            });
+          });
+        } else {
+          applications.takeSpot(jobId, function (err, rows) {
+            applications.offerSent(req.params.applicationId, function (
+              err,
+              rows
+            ) {
               res.redirect("/viewsubmissions");
             });
           });
-        });
-      }else{
-        applications.takeSpot(jobId,function(err,rows) {
-          applications.offerSent(req.params.applicationId,function(err,rows) {
-            res.redirect("/viewsubmissions");
-          });
-        });
-      }
-
-
-
-    });
-
-  });
+        }
+      });
+    }
+  );
 
   app.post("/createApplication", auth.requireLogin, function (req, res, next) {
     applications.createApplication(
@@ -611,5 +642,24 @@ module.exports = function (app) {
 
   app.get("/contactus", function (req, res, next) {
     res.render("contactus");
+  });
+
+  app.get("/systeminfo", auth.requireLogin, function (req, res, next) {
+    systeminfo.listActivities(function (err, rows) {
+      var sysactivities = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          sysactivities.push({
+            event_time: row.event_time,
+            command_type: row.command_type,
+            argument: row.argument,
+          });
+        });
+        res.render("admindatabaseactivity", {
+          user: req.user,
+          systeminfo: sysactivities,
+        });
+      }
+    });
   });
 };
