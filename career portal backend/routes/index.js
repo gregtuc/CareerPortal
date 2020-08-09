@@ -171,7 +171,7 @@ module.exports = function (app) {
     });
   });
   //changing user's recovery answer
-  app.post("/changeCheckingNumber", auth.requireLogin, function (req, res) {
+  app.post("/changeRecoveryAnswer", auth.requireLogin, function (req, res) {
     jobseeker.changeRecoveryAnswer(req.user, req.body.recoveryanswer, function (err, rows) {
       if (err) {
         console.log(err);
@@ -180,6 +180,7 @@ module.exports = function (app) {
       }
     });
   });
+
   //user's payment
   app.post("/userPayment", auth.requireLogin, function (req, res) {
     jobseeker.userPayment(req.user, req.body.paymentammount, function (err, rows) {
