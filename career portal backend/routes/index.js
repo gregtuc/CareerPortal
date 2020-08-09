@@ -135,19 +135,19 @@ module.exports = function (app) {
   //their quota depending on their membership, and rejects them if they have.
   app.post("/createjob", auth.requireLogin, function (req, res, next) {
     job.createJob(
-      req.user.userId,
-      req.body.jobTitle,
-      req.body.jobDescription,
-      req.body.numberEmployeesNeeded,
-      req.body.status,
-      req.body.jobCategory,
-      function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.redirect("/profile");
-        }
-    );
+        req.user.userId,
+        req.body.jobTitle,
+        req.body.jobDescription,
+        req.body.numberEmployeesNeeded,
+        req.body.status,
+        req.body.jobCategory,
+        function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.redirect("/profile");
+          }
+        });
   });
 
   app.post("/searchJob", auth.requireLogin, function (req, res, next) {
