@@ -128,7 +128,7 @@ var listUsers = function (callback) {
 // callback(err)
 var deleteUser = function (userId, callback) {
   console.log(userId);
-  db.query("DELETE FROM MyDatabase.users WHERE userId = ?", [userId], function (err, rows) {
+  db.query("DELETE FROM users WHERE userId = ?", [userId], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null);

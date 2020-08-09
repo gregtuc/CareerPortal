@@ -182,91 +182,44 @@ var signup = function (
 };
 
 //User will change is category base on what he chose
-var changeCategory = function(user,category,callback) {
-    updateMonthlyFee(user, category, callback);
-    // db.query(
-    //     "UPDATE users SET category = ? WHERE userId= ?",
-    //     [category,user.userId],
-    //     function (err) {
-    //         if (err) {
-    //             return callback(err);
-    //         }
-    //     });
-    listMatchingGoldUser(user.userId, function (err1, gold) {
-        listMatchingPrimeUser(user.userId, function (err2, prime) {
-            if (category === "Prime") {
-                //delete user from the GoldUser table if he was previously a gold user
-                if (gold) {
-                    deleteGoldUser(user.userId, function (err) {
-                        if (err) {
-                            return callback(err);
-                        }
-                        return callback(null);
-                    });
-                }
-                    db.query(
-                        "INSERT INTO PrimeUser ( userId ) values (?)",
-                        [user.userId],
-                        function (err) {
-                            if (err) {
-                                if (err.code === "ER_DUP_ENTRY") {
-                                    // If we somehow generated a duplicate PrimeUser, try again
-                                    return createJobSeekerUser(user.userId, callback);
-                                }
-                                return callback(err);
-                            }
-                            updateMonthlyFee(user.userId, category, callback);
-                            // Successfully created JobSeeker as prime user. Return the User.
-                        });
-                    return callback(null, new User(user));
-                } else if (category === "Gold") {
-                //delete user from the PrimeUser table if he was previously a prime user
-                if (prime) {
-                        deleteGoldUser(user.userId, function (err) {
-                            if (err) {
-                                return callback(err);
-                            }
-
-                            return callback(null);
-                        });
-                    }
-                        db.query(
-                            "INSERT INTO GoldUser ( userId ) values (?)",
-                            [user.userId],
-                            function (err) {
-                                if (err) {
-                                    if (err.code === "ER_DUP_ENTRY") {
-                                        // If we somehow generated a duplicate PrimeUser, try again
-                                        return createJobSeekerUser(user.userId, callback);
-                                    }
-                                    return callback(err);
-                                }
-                                // Successfully created JobSeeker as prime user. Return the User.
-                            });
-                    return callback(null, new User(user));
-                } else if (category === "Basic") {
-                //delete user from the PrimeUser table if he was previously a prime user
-                if (prime.length) {
-                        deletePrimeUser(user.userId, function (err) {
-                            if (err) {
-                                return callback(err);
-                            }
-                        });
-                    }
-                //delete user from the GoldUser table if he was previously a gold user
-                if (gold.length) {
-                        deleteGoldUser(user.userId, function (err) {
-                            if (err) {
-                                return callback(err);
-                            }
-                        });
-                    }
-                    return callback(null, new User(user));
-                }
+var changeCategory = function(user,category,fee,callback) {
+    db.query(
+        "UPDATE JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
+        [fee,category,user.userId,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully added monthly fee and account balance
+            return callback(null,new User(user));
         });
-    });
 }
 
+var addGoldUser = function (userId,callback){
+    db.query(
+        "INSERT INTO GoldUser ( userId ) values (?)",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully created JobSeeker as Gold user. Return the User.
+            return callback(null, new User(newUser));
+        });
+}
+
+var addPrimeUser = function (userId,callback){
+    db.query(
+        "INSERT INTO PrimeUser ( userId ) values (?)",
+        [newUser.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successfully created JobSeeker as Gold user. Return the User.
+            return callback(null, new User(newUser));
+        });
+}
 
 
 var updateMonthlyFee = function(newUser,category,callback){
@@ -360,7 +313,9 @@ var listJobseekers = function (callback) {
 // Delete a jobseeker
 // callback(err)
 var deleteJobseeker = function (userId, callback) {
-        db.query("DELETE FROM JobSeeker WHERE userId = ?", [userId], function (err) {
+        db.query("DELETE FROM JobSeeker WHERE userId = ?",
+            [userId],
+            function (err) {
             if (err) return callback(err);
             return callback(null);
         });
@@ -392,3 +347,4 @@ exports.deleteJobseeker = deleteJobseeker;
 exports.changeCategory = changeCategory;
 exports.deletePrimeUser = deletePrimeUser;
 exports.deleteGoldUser = deleteGoldUser;
+exports.addGoldUser = addGoldUser;
