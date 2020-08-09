@@ -40,7 +40,7 @@ var createUser = function (email, password, recoveryanswer, callback) {
     recoveryanswer: recoveryanswer,
   };
   db.query(
-    "INSERT INTO users ( userId, email, password, accountRecoveryAnswer ) values (?,?,?,?)",
+    "INSERT INTO MyDatabase.users ( userId, email, password, accountRecoveryAnswer ) values (?,?,?,?)",
     [newUser.userId, newUser.email, newUser.password, newUser.recoveryanswer],
     function (err) {
       if (err) {
@@ -61,7 +61,7 @@ var createUser = function (email, password, recoveryanswer, callback) {
 // callback(err, newUser)
 var signup = function (req, email, password, recoveryanswer, callback) {
   // Check if there's already a user with that email
-  db.query("SELECT * FROM users WHERE email = ?", [email], function (
+  db.query("SELECT * FROM MyDatabase.users WHERE email = ?", [email], function (
     err,
     rows
   ) {
@@ -87,7 +87,7 @@ var signup = function (req, email, password, recoveryanswer, callback) {
 // callback(err, user)
 var login = function (req, email, password, callback) {
   // Check that the user logging in exists
-  db.query("SELECT * FROM users WHERE email = ?", [email], function (
+  db.query("SELECT * FROM MyDatabase.users WHERE email = ?", [email], function (
     err,
     rows
   ) {
@@ -120,7 +120,7 @@ var login = function (req, email, password, callback) {
 // List all users
 // callback(err, users)
 var listUsers = function (callback) {
-  db.query("SELECT * FROM users", [], function (err, rows) {
+  db.query("SELECT * FROM MyDatabase.users", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -131,7 +131,7 @@ var listUsers = function (callback) {
 // callback(err, users)
 var listMatchingUsersForRecovery = function (email, recoveryanswer, callback) {
   db.query(
-    "SELECT * FROM users WHERE email = ? AND accountRecoveryAnswer = ?",
+    "SELECT * FROM MyDatabase.users WHERE email = ? AND accountRecoveryAnswer = ?",
     [email, recoveryanswer],
     function (err, rows) {
       if (err) return callback(err);
@@ -142,7 +142,7 @@ var listMatchingUsersForRecovery = function (email, recoveryanswer, callback) {
 
         //Next, update the user's password with the new password.
         db.query(
-          "UPDATE users SET password = ? WHERE email = ?",
+          "UPDATE MyDatabase.users SET password = ? WHERE email = ?",
           [hashedRandomString, email],
           function (err) {
             if (err) return callback(err);
@@ -185,7 +185,7 @@ var listMatchingUsersForRecovery = function (email, recoveryanswer, callback) {
 // callback(err)
 var deleteUser = function (userId, callback) {
   console.log(userId);
-  db.query("DELETE FROM users WHERE userId = ?", [userId], function (
+  db.query("DELETE FROM MyDatabase.users WHERE userId = ?", [userId], function (
     err,
     rows
   ) {
@@ -198,7 +198,7 @@ var deleteUser = function (userId, callback) {
 var promoteUser = function (userId, callback) {
   console.log(userId);
   db.query(
-    "UPDATE recruiter SET admin = 1 WHERE userId = ?",
+    "UPDATE MyDatabase.Recruiter SET admin = 1 WHERE userId = ?",
     [userId],
     callback
   );
@@ -207,7 +207,7 @@ var promoteUser = function (userId, callback) {
 var demoteUser = function (userId, callback) {
   console.log(userId);
   db.query(
-    "UPDATE recruiter SET admin = 0 WHERE userId = ?",
+    "UPDATE MyDatabase.Recruiter SET admin = 0 WHERE userId = ?",
     [userId],
     callback
   );
@@ -215,12 +215,20 @@ var demoteUser = function (userId, callback) {
 
 var lock = function (userId, callback) {
   console.log(userId);
-  db.query("UPDATE users SET frozen = 1 WHERE userId = ?", [userId], callback);
+  db.query(
+    "UPDATE MyDatabase.users SET frozen = 1 WHERE userId = ?",
+    [userId],
+    callback
+  );
 };
 
 var unlock = function (userId, callback) {
   console.log(userId);
-  db.query("UPDATE users SET frozen = 0 WHERE userId = ?", [userId], callback);
+  db.query(
+    "UPDATE MyDatabase.users SET frozen = 0 WHERE userId = ?",
+    [userId],
+    callback
+  );
 };
 
 exports.signup = signup;

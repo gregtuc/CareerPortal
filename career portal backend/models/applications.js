@@ -33,14 +33,14 @@ var createApplication = function (userId, jobId, title, cv, callback) {
     cv: cv,
   };
   db.query(
-    "INSERT INTO applications (applicationId, jobId, userId, title, description, status) values (?,?,?,?,?,?)",
+    "INSERT INTO MyDatabase.applications (applicationId, jobId, userId, title, description, status) values (?,?,?,?,?,?)",
     [
       newApplication.applicationId,
       newApplication.jobId,
       newApplication.userID,
       newApplication.title,
       newApplication.cv,
-        'Submitted',
+      "Submitted",
     ],
     function (err) {
       if (err) {
@@ -67,7 +67,7 @@ var createApplication = function (userId, jobId, title, cv, callback) {
 
 var updateApplicationPostCount = function (newApplication, callback) {
   db.query(
-    "UPDATE PrimeUser SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
+    "UPDATE MyDatabase.PrimeUser SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
     [newApplication.userId],
     function (err) {
       if (err) {
@@ -81,52 +81,57 @@ var updateApplicationPostCount = function (newApplication, callback) {
 
 // List all applications matching a specific userId
 var listMatchingApplications = function (userId, callback) {
-  db.query("SELECT * FROM applications WHERE userId = ?", [userId], function (
-    err,
-    rows
-  ) {
-    if (err) return callback(err);
-    return callback(null, rows);
-  });
+  db.query(
+    "SELECT * FROM MyDatabase.applications WHERE userId = ?",
+    [userId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
 // List all applications matching a specific title
 var listApplicationsSearched = function (title, callback) {
-  db.query("SELECT * FROM applications WHERE title = ?", [title], function (
-    err,
-    rows
-  ) {
-    if (err) return callback(err);
-    return callback(null, rows);
-  });
+  db.query(
+    "SELECT * FROM MyDatabase.applications WHERE title = ?",
+    [title],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
 // List all applications (Not sure if this is needed)
 var listApplications = function (callback) {
-  db.query("SELECT * FROM applications", [], function (err, rows) {
+  db.query("SELECT * FROM MyDatabase.applications", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
   });
 };
 
-var listSubmissions = function (employerId , callback) {
+var listSubmissions = function (employerId, callback) {
   console.log(employerId);
-  db.query("SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, numberEmployeesNeeded \n" +
-      "FROM applications, jobs \n" +
+  db.query(
+    "SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, numberEmployeesNeeded \n" +
+      "FROM MyDatabase.applications, MyDatabase.jobs \n" +
       "where employerId = ? AND applications.jobId = jobs.jobId",
-      [employerId], function (err, rows) {
-    if (err) return callback(err);
+    [employerId],
+    function (err, rows) {
+      if (err) return callback(err);
 
-    return callback(null, rows);
-  });
+      return callback(null, rows);
+    }
+  );
 };
 
 // Delete an application
 // callback(err)
 var deleteApplication = function (applicationId, callback) {
   db.query(
-    "DELETE FROM applications WHERE applicationId = ?",
+    "DELETE FROM MyDatabase.applications WHERE applicationId = ?",
     [applicationId],
     callback
   );
@@ -134,66 +139,56 @@ var deleteApplication = function (applicationId, callback) {
 
 var getApplications = function (applicationId, callback) {
   db.query(
-      "SELECT numberEmployeesNeeded,jobs.jobId FROM applications, jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
-      [applicationId], function (
-          err,
-          rows
-      ) {
-        if (err) return callback(err);
-        return callback(null, rows);
-      }
+    "SELECT numberEmployeesNeeded,jobs.jobId FROM MyDatabase.applications, MyDatabase.jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
+    [applicationId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
   );
 };
 
-var offerSent = function (applicationId,callback) {
+var offerSent = function (applicationId, callback) {
   db.query(
-      "UPDATE applications SET status = 'Offer Sent' WHERE applicationId = ?",
-      [applicationId], function (
-          err,
-          rows
-      ) {
-        if (err) return callback(err);
-        return callback(null, rows);
-      }
+    "UPDATE MyDatabase.applications SET status = 'Offer Sent' WHERE applicationId = ?",
+    [applicationId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
   );
 };
 
-var takeSpot = function (jobId,callback) {
+var takeSpot = function (jobId, callback) {
   db.query(
-      "UPDATE jobs SET numberEmployeesNeeded = numberEmployeesNeeded - 1 WHERE jobId = ?",
-      [jobId], function (
-          err,
-          rows
-      ) {
-        if (err) return callback(err);
-        return callback(null, rows);
-      }
-      );
+    "UPDATE MyDatabase.jobs SET numberEmployeesNeeded = numberEmployeesNeeded - 1 WHERE jobId = ?",
+    [jobId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
 var declineOthers = function (applicationId, jobId, callback) {
   db.query(
-      "UPDATE applications SET status = 'Candidacy not considered' WHERE applicationId != ? AND applications.jobId = ? ",
-      [applicationId, jobId], function (
-          err,
-          rows
-      ) {
-        if (err) return callback(err);
-        return callback(null, rows);
-      }
+    "UPDATE MyDatabase.applications SET status = 'Candidacy not considered' WHERE applicationId != ? AND applications.jobId = ? ",
+    [applicationId, jobId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
   );
 };
 
 var declineApplication = function (applicationId, callback) {
   db.query(
-      "UPDATE applications SET status = 'Candidacy not considered' WHERE applicationId = ?",
-      [applicationId], function (
-          err,
-          rows
-      ) {
-        if (err) return callback(err);
-        return callback(null, rows);
-      }
+    "UPDATE MyDatabase.applications SET status = 'Candidacy not considered' WHERE applicationId = ?",
+    [applicationId],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
   );
 };
 
