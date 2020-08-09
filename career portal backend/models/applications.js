@@ -112,7 +112,7 @@ var listApplications = function (callback) {
 
 var listSubmissions = function (employerId , callback) {
   console.log(employerId);
-  db.query("SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, dateSent \n" +
+  db.query("SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, numberEmployeesNeeded \n" +
       "FROM applications, jobs \n" +
       "where employerId = ? AND applications.jobId = jobs.jobId",
       [employerId], function (err, rows) {
