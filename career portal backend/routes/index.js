@@ -446,6 +446,29 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/viewsubmissions", auth.requireLogin, function (req, res, next) {
+    applications.listSubmissions(req.user.userId , function (err, rows) {
+      var applications = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          applications.push({
+            applicationId: row.applicationId,
+            jobTitle: row.jobTitle,
+            title: row.title,
+            description: row.description,
+            status: row.status,
+            jobCategory: row.jobCategory,
+            dateSent: row.dateSent,
+          });
+        });
+      }
+      res.render("viewsubmissions", {
+        applications: req.applications,
+        jobs: applications,
+      });
+    });
+  });
+
   app.get(
     "/action/withdrawapplication/:applicationId",
     auth.requireLogin,
@@ -458,6 +481,52 @@ module.exports = function (app) {
       });
     }
   );
+
+  app.get(
+      "/action/declineapplication/:applicationId",
+      auth.requireLogin,
+      function (req, res, next) {
+        applications.declineApplication(req.params.applicationId, function (err) {
+          if (err) {
+            console.error(err);
+          }
+          res.redirect("/viewsubmissions");
+        });
+      }
+  );
+
+  app.get("/action/acceptapplication/:applicationId", auth.requireLogin, function (req, res, next) {
+    var newCount;
+    var jobId;
+    applications.getApplications(req.params.applicationId, function (
+        err,
+        rows
+    ) {
+      newCount = rows[0].numberEmployeesNeeded - 1;
+      jobId = rows[0].jobId;
+      if(newCount == 0){
+        applications.takeSpot(jobId,function(err,rows) {
+          applications.offerSent(req.params.applicationId,function(err,rows) {
+            applications.declineOthers(req.params.applicationId, jobId,function(err,rows) {
+
+
+              res.redirect("/viewsubmissions");
+            });
+          });
+        });
+      }else{
+        applications.takeSpot(jobId,function(err,rows) {
+          applications.offerSent(req.params.applicationId,function(err,rows) {
+            res.redirect("/viewsubmissions");
+          });
+        });
+      }
+
+
+
+    });
+
+  });
 
   app.post("/createApplication", auth.requireLogin, function (req, res, next) {
     applications.createApplication(
