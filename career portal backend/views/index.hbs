@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Home</title>
-    {{> head}}
-  </head>
-  <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1>Welcome to the Career Portal!</h1>
-        <p>Sign in below, or sign up if you don't have an account.</p>
-        <p>
-          <div>
-            <a href="/login"><button class="btn btn-primary btn-lg">Log In</button></a>
-            <a href="/usersignup"><button class="btn btn-info btn-lg">User Sign Up</button></a>
-            <a href="/recruitersignup"><button class="btn btn-info btn-lg">Employer Sign Up</button></a>
-            <a href="/forgotpassword"><button class="btn btn-info btn-lg">Forgot your password?</button></a>
-            <button class="btn btn-info btn-lg" onclick="alert('Email 353groupproject@gmail.com for help!')">Contact Us</button>
-          </div>
-        </p>
-      </div>
-    </div>
-  </body>
+    <head>
+        <title>Home</title>
+        {{> head}}
+    </head>
+    <body>
+        <div class="index-container">
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-header">
+                    <h1>
+                        Welcome to the Career Portal!<br />
+                        Sign in below, or sign up if you don't have an account.
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <a href="/login"><button class="btn btn-success btn-lg">Log In</button></a>
+                        </div>
+                        <div class="btn-group mr-2" role="group" aria-label="Second group">
+                            <a href="/usersignup"><button class="btn btn-primary btn-lg">User Sign Up</button></a>
+                        </div>
+                        <div class="btn-group mr-2" role="group" aria-label="Third group">
+                            <a href="/recruitersignup"><button class="btn btn-primary btn-lg">Recruiter Sign Up</button></a>
+                        </div>
+                        <br/>
+                        <br />
+                        <div class="btn-group mr-2" role="group" aria-label="Fourth group">
+                            <a href="/forgotpassword"><button class="btn btn-danger btn-lg">Forgot your password?</button></a>
+                        </div>
+                        <div class="btn-group mr-2" role="group" aria-label="Fifth group">
+                            <button class="btn btn-light btn-lg" onclick="alert('Email 353groupproject@gmail.com for help!')">Contact Us</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

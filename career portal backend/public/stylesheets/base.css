@@ -28,9 +28,29 @@ td {
   padding: 5px;
 }
 
+h1 {
+  color: white;
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: calc(10px + 2vmin);
+  font-weight: bold;
+  text-decoration: none;
+  letter-spacing: -1px;
+  line-height: 1;
+  text-align: center;
+}
+
+.card {
+  text-align: left;
+  display: inline-block;
+  align-items: center;
+  width: 35rem;
+  padding: 30px;
+  border-radius: 20px;
+}
+
 .well {
   background-color: #b3b3b3;
-  min-height: 30vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,4 +59,28 @@ td {
   border-radius: 10px;
   padding: 2%;
   margin: 5px;
+}
+
+.login-container {
+  text-align: center;
+  padding-top: 10rem;
+  background: linear-gradient(to top, #f2f2f2 -31%, #b3b3b3 110%);
+}
+.index-container {
+  text-align: center;
+  padding-top: 10rem;
+  padding-bottom: 10rem;
+  background: linear-gradient(to top, #f2f2f2 -31%, #b3b3b3 110%);
+}
+
+.signup-container,
+.forgotpass-container {
+  text-align: center;
+  padding-top: 3rem;
+  background: linear-gradient(to top, #f2f2f2 -31%, #b3b3b3 110%);
+}
+
+.btn-toolbar {
+  text-align: center;
+  display: block;
 }
