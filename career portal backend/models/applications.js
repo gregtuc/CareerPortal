@@ -58,7 +58,7 @@ var createApplication = function (userId, jobId, title, cv, callback) {
         }
         return callback(err);
       }
-      // Successfully created user
+      // Successfully created application
       //Now call updateRecruiterPostCount table to increment the active user's post count.
       return updateApplicationPostCount(newApplication, callback);
     }
@@ -67,8 +67,8 @@ var createApplication = function (userId, jobId, title, cv, callback) {
 
 var updateApplicationPostCount = function (newApplication, callback) {
   db.query(
-    "UPDATE MyDatabase.PrimeUser SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
-    [newApplication.userId],
+    "UPDATE MyDatabase.JobSeeker SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
+    [newApplication.userID],
     function (err) {
       if (err) {
         return callback(err);

@@ -63,7 +63,7 @@ var createJob = function (
         }
         return callback(err);
       }
-      // Successfully created user
+      // Successfully created job
       //Now call updateRecruiterPostCount table to increment the active user's post count.
       return updateRecruiterPostCount(newJob, callback);
     }

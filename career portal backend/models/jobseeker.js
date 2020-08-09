@@ -159,7 +159,7 @@ var signup = function (
 //User will change is category base on what he chose
 var changeCategory = function (user, category, fee, callback) {
   db.query(
-    "UPDATE MyDatabase.JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
+    "UPDATE MyDatabase.JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET r.signUpDate = CURRENT_TIMESTAMP,u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
     [fee, category, user.userId, user.userId],
     function (err) {
       if (err) {
@@ -255,33 +255,6 @@ var userPayment = function (user, amount, callback) {
   );
 };
 
-var addGoldUser = function (userId, callback) {
-  db.query(
-    "INSERT INTO MyDatabase.GoldUser ( userId ) values (?)",
-    [newUser.userId],
-    function (err) {
-      if (err) {
-        return callback(err);
-      }
-      // Successfully created JobSeeker as Gold user. Return the User.
-      return callback(null, new User(newUser));
-    }
-  );
-};
-
-var addPrimeUser = function (userId, callback) {
-  db.query(
-    "INSERT INTO MyDatabase.PrimeUser ( userId ) values (?)",
-    [newUser.userId],
-    function (err) {
-      if (err) {
-        return callback(err);
-      }
-      // Successfully created JobSeeker as Gold user. Return the User.
-      return callback(null, new User(newUser));
-    }
-  );
-};
 
 var updateMonthlyFee = function (newUser, category, callback) {
   if (category === "Prime") {
@@ -384,21 +357,6 @@ var deleteJobseeker = function (userId, callback) {
   });
 };
 
-var deletePrimeUser = function (userId, callback) {
-  db.query("DELETE FROM PrimeUser WHERE userId = ?", [userId], function (err) {
-    if (err) return callback(err);
-
-    return callback(null);
-  });
-};
-var deleteGoldUser = function (userId, callback) {
-  db.query("DELETE FROM GoldUser WHERE userId = ?", [userId], function (err) {
-    if (err) return callback(err);
-
-    return callback(null);
-  });
-};
-
 exports.createJobSeekerUser = createJobSeekerUser;
 exports.listMatchingJobseeker = listMatchingJobseeker;
 exports.listMatchingGoldUser = listMatchingGoldUser;
@@ -407,9 +365,6 @@ exports.signup = signup;
 exports.listJobseekers = listJobseekers;
 exports.deleteJobseeker = deleteJobseeker;
 exports.changeCategory = changeCategory;
-exports.deletePrimeUser = deletePrimeUser;
-exports.deleteGoldUser = deleteGoldUser;
-exports.addGoldUser = addGoldUser;
 exports.changePaymentType = changePaymentType;
 exports.changePaymentMethod = changePaymentMethod;
 exports.changeCreditNb = changeCreditNb;
