@@ -458,7 +458,7 @@ module.exports = function (app) {
             description: row.description,
             status: row.status,
             jobCategory: row.jobCategory,
-            dateSent: row.dateSent,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
           });
         });
       }
