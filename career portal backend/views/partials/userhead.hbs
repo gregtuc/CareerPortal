@@ -4,6 +4,11 @@
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <table class="center">
     <tr>
         <td><a href="/profile" class="btn btn-success">Profile</a></td>
@@ -31,18 +36,25 @@
                         <div class="modal-body">
                             <form action="/searchJob" method="post">
                                 <div class="form-group">
-                                    <label>Search by name</label>
+                                    <label>Search by Name</label>
                                     <input type="text" class="form-control" name="jobTitle" required />
                                 </div>
-                            
-                                <div class="form-group">
-                                <label>Search by category</label><br>
-                                    <input type="radio" name="category" value="usinghands">
-                                    <label>USING HANDS</label><br>
-                                    <input type="radio" name="category" value="usinglegs">
-                                    <label>USING LEGS</label><br>
+                    
+                                <button type="submit" class="btn btn-info">Search</button>
+                            </form>
+                            <form action="/searchJobByCategory" method="post">
+                                <label>Search by Category</label><br>
+                                <div>
+                                        <select name="jobCategory">
+                                        <option value="front">Front-End Engineer</option>
+                                        <option value="back">Back-End Engineer</option>
+                                        <option value="full">Full Stack Engineer</option>
+                                        <option value="qa">Software Engineer in Test (QA Engineer)</option>
+                                        <option value="devops">DevOps Engineer</option>
+                                        <option value="security">Security Engineer</option>
+                                        </select>
                                 </div>
-                                <button type="submit" class="btn btn-info">Search Job</button>
+                                <button type="submit" class="btn btn-info">Search</button>
                             </form>
                         </div>
                         <div class="modal-footer">

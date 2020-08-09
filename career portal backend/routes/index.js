@@ -142,6 +142,29 @@ module.exports = function (app) {
     });
   });
 
+  app.post("/searchJobByCategory", auth.requireLogin, function (req, res, next) {
+    job.listJobSearchedByCategory(req.body.jobCategory, function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeed: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+            jobCategory:row.jobCategory,
+          });
+        });
+      }
+      res.render("jobfeed", { user: req.user, jobs: jobs });
+    });
+  });
+
+
+
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.
   app.post("/getAllJobs", auth.requireLogin, function (req, res, next) {
