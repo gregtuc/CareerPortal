@@ -190,11 +190,11 @@ var changeCategory = function(user,category,fee,callback) {
             if (err) {
                 return callback(err);
             }
-            // Successfully added monthly fee and account balance
+            // Successful
             return callback(null,new User(user));
         });
 }
-//User will change is category base on what he chose
+//User will change is payment type base on what he chose
 var changePaymentType = function(user,type,callback) {
     db.query(
         "UPDATE  users SET autoOrManual= ? WHERE userId= ?",
@@ -203,11 +203,11 @@ var changePaymentType = function(user,type,callback) {
             if (err) {
                 return callback(err);
             }
-            // Successfully added monthly fee and account balance
+            // Successful
             return callback(null,new User(user));
         });
 }
-//User will change is category base on what he chose
+//User will change is paymentMethod base on what he chose
 var changePaymentMethod = function(user,method,callback) {
     db.query(
         "UPDATE  users SET paymentMethod= ? WHERE userId= ?",
@@ -216,7 +216,59 @@ var changePaymentMethod = function(user,method,callback) {
             if (err) {
                 return callback(err);
             }
-            // Successfully added monthly fee and account balance
+            // Successful
+            return callback(null,new User(user));
+        });
+}
+//User will change is credit number base on what he chose
+var changeCreditNb = function(user,nb,callback) {
+    db.query(
+        "UPDATE  users SET creditNo= ? WHERE userId= ?",
+        [nb,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successful
+            return callback(null,new User(user));
+        });
+}
+//User will change is checking number base on what he chose
+var changeCheckingNb = function(user,nb,callback) {
+    db.query(
+        "UPDATE  users SET checkingNo= ? WHERE userId= ?",
+        [nb,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successful
+            return callback(null,new User(user));
+        });
+}
+//User will change is recovery answer base on what he chose
+var changeRecoveryAnswer = function(user,answer,callback) {
+    db.query(
+        "UPDATE  users SET accountRecoveryAnswer= ? WHERE userId= ?",
+        [answer,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successful
+            return callback(null,new User(user));
+        });
+}
+//User will pay his desired amount
+var userPayment = function(user,amount,callback) {
+    db.query(
+        "UPDATE  users SET accountBalance = accountBalance - ? WHERE userId= ?",
+        [amount,user.userId],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successful
             return callback(null,new User(user));
         });
 }
@@ -376,3 +428,7 @@ exports.deleteGoldUser = deleteGoldUser;
 exports.addGoldUser = addGoldUser;
 exports.changePaymentType = changePaymentType;
 exports.changePaymentMethod = changePaymentMethod;
+exports.changeCreditNb= changeCreditNb;
+exports.changeCheckingNb = changeCheckingNb;
+exports.changeRecoveryAnswer=changeRecoveryAnswer;
+exports.userPayment=userPayment;

@@ -150,6 +150,46 @@ module.exports = function (app) {
       }
     });
   });
+  //changing user's credit number
+  app.post("/changeCreditNumber", auth.requireLogin, function (req, res) {
+    jobseeker.changeCreditNb(req.user, req.body.creditcardnumber, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  //changing user's checking number
+  app.post("/changeCheckingNumber", auth.requireLogin, function (req, res) {
+    jobseeker.changeCheckingNb(req.user, req.body.checkingnumber, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  //changing user's recovery answer
+  app.post("/changeCheckingNumber", auth.requireLogin, function (req, res) {
+    jobseeker.changeRecoveryAnswer(req.user, req.body.recoveryanswer, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
+  //user's payment
+  app.post("/userPayment", auth.requireLogin, function (req, res) {
+    jobseeker.userPayment(req.user, req.body.paymentammount, function (err, rows) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/profile");
+      }
+    });
+  });
 
 
   //Endpoint for creating a new job posting.
