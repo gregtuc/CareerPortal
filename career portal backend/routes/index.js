@@ -74,12 +74,12 @@ module.exports = function (app) {
     });
   });
 
-  app.get("/action/updateStatus/:jobId", auth.requireLogin, function (
+  app.get("/action/updateStatus/:jobId/:status", auth.requireLogin, function (
     req,
     res,
     next
   ) {
-    job.updateStatus(req.params.jobId, function (err) {
+    job.updateStatus(req.params.jobId,req.params.status, function (err) {
       if (err) {
         console.log(err);
       } else {

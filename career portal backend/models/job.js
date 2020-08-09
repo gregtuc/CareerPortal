@@ -134,13 +134,17 @@ var listJobs = function (callback) {
 // Delete a job
 // callback(err)
 var deleteJob = function (jobId, callback) {
-  db.query("DELETE FROM jobs WHERE MyDatabase.jobId = ?", [jobId], callback);
+  db.query("DELETE FROM MyDatabase.jobs WHERE jobId = ?", [jobId], callback);
 };
 
-var updateStatus = function (jobId, callback) {
+var updateStatus = function (jobId,status, callback) {
+    if(status ==="Active")
+        var newStatus="Inactive"
+    else
+        var newStatus="Active"
   db.query(
-    "UPDATE jobs SET status= 'Inactive' WHERE MyDatabase.jobId=?",
-    [jobId],
+    "UPDATE MyDatabase.jobs SET status= ? WHERE jobId=?",
+    [newStatus,jobId],
     callback
   );
 };
