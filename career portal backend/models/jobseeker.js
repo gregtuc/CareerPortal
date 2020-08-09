@@ -89,43 +89,16 @@ var createJobSeekerUser = function (
           // If the job seeker is a prime user, create new prime user.
           if(accounttype==="Prime")
           {
-              console.log("Creating prime Category");
-              db.query(
-                  "INSERT INTO PrimeUser ( userId ) values (?)",
-                  [newUser.userId],
-                  function (err) {
-                      if (err) {
-                          if (err.code === "ER_DUP_ENTRY") {
-                              // If we somehow generated a duplicate PrimeUser, try again
-                              return createJobSeekerUser(userId, callback);
-                          }
-                          return callback(err);
-                      }
                       updateMonthlyFee(newUser,accounttype,callback);
                       // Successfully created JobSeeker as prime user. Return the User.
                       return callback(null, new User(newUser));
-                  });
         }
           else if(accounttype==="Gold")
           {
-            db.query(
-                "INSERT INTO GoldUser ( userId ) values (?)",
-                [newUser.userId],
-                function (err) {
-                  if (err) {
-                    if (err.code === "ER_DUP_ENTRY") {
-                      // If we somehow generated a duplicate JobSeeker, try again
-                      return createJobSeekerUser(userId, callback);
-                    }
-                    return callback(err);
-                  }
                   // Successfully created JobSeeker as Gold user. Return the User.
                     updateMonthlyFee(newUser,accounttype,callback);
                   return callback(null, new User(newUser));
-                });
-          }
-          else
-          {
+          } else {
             return callback(null, new User(newUser));
           }
       });
