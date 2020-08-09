@@ -95,10 +95,13 @@ module.exports = function (app) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/profile");
+        res.redirect("/viewjoblistings");
       }
     });
   });
+
+
+
   app.post("/changeCategory", auth.requireLogin, function (req, res) {
     if (req.body.accounttype === "Gold") var newfee = 20;
     else if (req.body.accounttype === "Prime") var newfee = 10;
@@ -219,6 +222,28 @@ module.exports = function (app) {
       res.render("explorepage", { user: req.user, jobs: jobs });
     });
   });
+
+  app.get("/viewJobListings", auth.requireLogin, function (req, res, next) {
+    job.listJobs(function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+            jobCategory: row.jobCategory,
+          });
+        });
+      }
+      res.render("viewjoblistings", { user: req.user, jobs: jobs });
+    });
+  });
+
 
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.

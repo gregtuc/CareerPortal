@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View my Job Listings</title>
+    {{> head}}
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1>View My Job Listings </h1>
+        <a href="/logout" class="btn btn-info">Logout</a>
+        <a href="/Profile" class="btn btn-info">Return to Profile</a>
+    </div>
+    <p></p>
+    <table class="table table-striped table-hover">
+        <thead>
+        <th>Employer ID</th>
+        <th>Job ID</th>
+        <th>Title</th>
+        <th>Job Description</th>
+        <th>Status</th>
+        <th>Date Posted</th>
+        <th>Job Category</th>
+        <th> Do you want to change status?</th>
+        </thead>
+        <tbody>
+        {{#each jobs}}
+            <tr>
+                <td>{{ this.employerId }}</td>
+                <td>{{ this.jobId }}</td>
+                <td>{{ this.jobTitle }}</td>
+                <td>{{ this.jobDescription}}</td>
+                <td>{{ this.status }}</td>
+                <td>{{ this.dateSent }}</td>
+                <td>{{ this.jobCategory }}</td>
+
+
+                <td>
+                    <div class="btn-group">
+                        <a href="/action/updateStatus/{{this.jobId}}"><button class="btn" type="button">Change Status to Inactive</button> </a>
+                    </div>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>
