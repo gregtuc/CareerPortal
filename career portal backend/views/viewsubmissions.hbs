@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Application Submissions</title>
+    {{> head}}
+</head>
+<body>
+<div class="container">
+    <div class="page-header text-center">
+        <h1>View my Applications</h1>
+        <a href="/logout" class="btn btn-info">Logout</a>
+        <a href="/Profile" class="btn btn-info">Return to Profile</a>
+    </div>
+    <p></p>
+    <table class="table table-striped table-hover">
+        <thead>
+        <th>Application ID</th>
+        <th>Job Title</th>
+        <th>CV Title</th>
+        <th>Body</th>
+        <th>Status</th>
+        <th>Job Category</th>
+        <th>Jobs Available</th>
+        <th>Action</th>
+
+        </thead>
+        <tbody>
+        {{#each jobs}}
+            <tr>
+                <td>{{ this.applicationId }}</td>
+                <td>{{ this.jobTitle }}</td>
+                <td>{{ this.title }}</td>
+                <td>{{ this.description }}</td>
+                <td>{{ this.status }}</td>
+                <td>{{ this.jobCategory }}</td>
+                <td>{{ this.dateSent }}</td>
+
+                <td>
+                    <div class="btn-group">
+                        <a href="/action/acceptapplication/{{this.applicationId}}"><button class="btn" type="button">Accept</button> </a>
+                        <a href="/action/declineapplication/{{this.applicationId}}"><button class="btn" type="button">Decline</button> </a>
+
+                    </div>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>
