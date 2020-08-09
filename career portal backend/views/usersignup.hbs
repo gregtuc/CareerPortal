@@ -1,74 +1,76 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>User Sign Up</title>
-    {{> head}}
-  </head>
-  <body>
-    <div class="container">
-      <div class="col-sm-6 col-sm-offset-3">
-        <h1>User Sign Up</h1>
+    <head>
+        <title>User Sign Up</title>
+        {{> head}}
+    </head>
+    <body>
+        <div class="signup-container">
+            <div class="card text-white bg-dark mb-3">
+                <div class="card-header"><h1>Sign up as a User</h1></div>
+                <div class="card-body">
+                    {{#if message.length}}
+                    <div class="alert alert-danger">{{ message }}</div>
+                    {{/if}}
 
-        {{#if message.length}}
-          <div class="alert alert-danger">{{ message }}</div>
-        {{/if}}
-
-        <form action="/usersignup" method="post">
-          <div class="form-group">
-            <label>Email</label>
-            <input type="text" class="form-control" name="email" required>
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password" required>
-          </div>
-          <div class="form-group">
-            <label>What type of account would you like?:</label><br>
-              <input type="radio" name="accounttype" id="basic" value="Basic" required>
-                <label for="gold">Basic</label><br>
-                <input type="radio" name="accounttype" id="prime" value="Prime" required>
-                <label for="prime">Prime</label><br>
-                <input type="radio" name="accounttype" id="gold" value="Gold" required>
-                <label for="gold">Gold</label><br>
-          </div>
-          <div class="form-group">
-            <label>What payment method would you like to use?:</label><br>
-                <input type="radio" name="paymentmethod" id="credit" value="Credit">
-                <label for="credit">Credit</label><br>
-                <input type="radio" name="paymentmethod" id="checking" value="Checking">
-                <label for="checking">Checking</label><br>
-          </div>
-          <div class="form-group">
-            <label>Would you like to make automatic or manual payments?:</label><br>
-                <input type="radio" name="paymenttype" id="automatic" value="Automatic">
-                <label for="automatic">Automatic</label><br>
-                <input type="radio" name="paymenttype" id="manual" value="Manual">
-                <label for="manual">Manual</label><br>
-          </div>
-          <div class="form-group">
-            <label>Credit Card number (if applicable, otherwise leave empty.)</label>
-            <input type="text" class="form-control" name="creditcardnumber">
-          </div>
-          <div class="form-group">
-            <label>Checking Number (if applicable, otherwise leave empty.)</label>
-            <input type="text" class="form-control" name="checkingnumber">
-          </div>
-            <div class="form-group">
-                <label>Describe yourself:</label>
-                <textarea type="text" class="form-control" id="description" name="description"></textarea>
+                    <form action="/usersignup" method="post">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" class="form-control" name="email" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" name="password" required />
+                        </div>
+                        <div class="form-group">
+                            <label>What type of account would you like?:</label><br />
+                            <input type="radio" name="accounttype" id="basic" value="Basic" />
+                            <label for="gold">Basic</label><br />
+                            <input type="radio" name="accounttype" id="prime" value="Prime" />
+                            <label for="prime">Prime</label><br />
+                            <input type="radio" name="accounttype" id="gold" value="Gold" />
+                            <label for="gold">Gold</label><br />
+                        </div>
+                        <div class="form-group">
+                            <label>What payment method would you like to use?:</label><br />
+                            <input type="radio" name="paymentmethod" id="credit" value="Credit" />
+                            <label for="credit">Credit</label><br />
+                            <input type="radio" name="paymentmethod" id="checking" value="Checking" />
+                            <label for="checking">Checking</label><br />
+                        </div>
+                        <div class="form-group">
+                            <label>Would you like to make automatic or manual payments?:</label><br />
+                            <input type="radio" name="paymenttype" id="automatic" value="Automatic" />
+                            <label for="automatic">Automatic</label><br />
+                            <input type="radio" name="paymenttype" id="manual" value="Manual" />
+                            <label for="manual">Manual</label><br />
+                        </div>
+                        <div class="form-group">
+                            <label>Credit Card number (if applicable, otherwise leave empty.)</label>
+                            <input type="text" class="form-control" name="creditcardnumber" />
+                        </div>
+                        <div class="form-group">
+                            <label>Checking Number (if applicable, otherwise leave empty.)</label>
+                            <input type="text" class="form-control" name="checkingnumber" />
+                        </div>
+                        <div class="form-group">
+                            <label>Describe yourself:</label>
+                            <textarea type="text" class="form-control" id="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Recovery Answer <br />
+                                (This will be used to verify your identity if you forget your password)
+                            </label>
+                            <input type="text" class="form-control" name="recoveryanswer" id="recoveryanswer" required />
+                        </div>
+                        <button type="submit" class="btn btn-info">Sign Up</button>
+                    </form>
+                </div>
+                <hr />
+                <p>Already have an account? <a href="/login">Login</a></p>
+                <p>Or return to <a href="/">home</a>.</p>
             </div>
-          <div class="form-group">
-            <label>Recovery Answer <br/> (This will be used to verify your identity if you forget your password)</label>
-            <input type="text" class="form-control" name="recoveryanswer" id="recoveryanswer" required>
-          </div>
-          <button type="submit" class="btn btn-info">Sign Up</button>
-        </form>
-
-        <hr>
-
-        <p>Already have an account? <a href="/login">Login</a></p>
-        <p>Or return to <a href="/">home</a>.</p>
-      </div>
-    </div>
-  </body>
+        </div>
+    </body>
 </html>
