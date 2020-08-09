@@ -49,27 +49,17 @@ module.exports = function (app) {
           userRows
         ) {
           //Check if user is a PrimeUser
-          jobseeker.listMatchingPrimeUser(req.user.userId, function (
-            err,
-            prime
-          ) {
-            if (prime.length) {
+            if (userRows[0].category==="Prime") {
               res.render("userprofileprime", {
                 user: req.user,
                 jobseeker: userRows[0],
-                prime: prime[0],
               });
             } else {
               //if not a prime user,check if user is a GoldUser
-              jobseeker.listMatchingGoldUser(req.user.userId, function (
-                err,
-                gold
-              ) {
-                if (gold.length) {
+                if (userRows[0].category==="Gold") {
                   res.render("userprofilegold", {
                     user: req.user,
                     jobseeker: userRows[0],
-                    gold: gold[0],
                   });
                 } else {
                   //If not a gold and prime user, render basic user profile
@@ -78,11 +68,9 @@ module.exports = function (app) {
                     jobseeker: userRows[0],
                   });
                 }
-              });
-            }
+              }
           });
-        });
-      }
+        }
     });
   });
 

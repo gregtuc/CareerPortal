@@ -276,7 +276,7 @@ var userPayment = function(user,amount,callback) {
 var addGoldUser = function (userId,callback){
     db.query(
         "INSERT INTO GoldUser ( userId ) values (?)",
-        [newUser.userId],
+        [userId],
         function (err) {
             if (err) {
                 return callback(err);
@@ -289,7 +289,7 @@ var addGoldUser = function (userId,callback){
 var addPrimeUser = function (userId,callback){
     db.query(
         "INSERT INTO PrimeUser ( userId ) values (?)",
-        [newUser.userId],
+        [userId],
         function (err) {
             if (err) {
                 return callback(err);
