@@ -518,10 +518,10 @@ module.exports = function (app) {
   });
 
   app.get(
-    "/action/withdrawapplication/:applicationId",
+    "/action/withdrawapplication/:applicationId/:userId",
     auth.requireLogin,
     function (req, res, next) {
-      applications.deleteApplication(req.params.applicationId, function (err) {
+      applications.deleteApplication(req.params.applicationId,req.params.userId, function (err) {
         if (err) {
           console.error(err);
         }

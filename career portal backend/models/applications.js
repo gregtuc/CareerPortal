@@ -129,14 +129,31 @@ var listSubmissions = function (employerId, callback) {
 
 // Delete an application
 // callback(err)
-var deleteApplication = function (applicationId, callback) {
+var deleteApplication = function (applicationId,userId, callback) {
   db.query(
     "DELETE FROM MyDatabase.applications WHERE applicationId = ?",
     [applicationId],
-    callback
+    function (err)
+    {
+        if(err)
+            callback(err);
+        return decreaseApplicationPostCount(userId,callback)
+    }
   );
 };
-
+var decreaseApplicationPostCount = function (userID, callback) {
+    db.query(
+        "UPDATE MyDatabase.JobSeeker SET numberJobsApplied = numberJobsApplied - 1 WHERE userId = ?",
+        [userID],
+        function (err) {
+            if (err) {
+                return callback(err);
+            }
+            // Successful
+            return callback(null);
+        }
+    );
+};
 var getApplications = function (applicationId, callback) {
   db.query(
     "SELECT numberEmployeesNeeded,jobs.jobId FROM MyDatabase.applications, MyDatabase.jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
