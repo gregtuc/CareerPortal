@@ -171,7 +171,7 @@ module.exports = function (app) {
 
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.
-  app.post("/getAllJobs", auth.requireLogin, function (req, res, next) {
+  app.get("/getAllJobs", auth.requireLogin, function (req, res, next) {
     job.listJobs(function (err, rows) {
       var jobs = [];
       if (!err) {
