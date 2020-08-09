@@ -6,11 +6,11 @@ var Job = function (job) {
   var that = Object.create(Job.prototype);
 
   that.jobId = job.jobId;
-  that.jobId = job.jobId;
   that.jobTitle = job.jobTitle;
   that.jobDescription = job.description;
   that.numberEmployeesNeeded = job.numberEmployeesNeeded;
   that.status = job.jobStatus;
+  that.jobCategory= job.jobCategory;
   return that;
 };
 
@@ -32,6 +32,7 @@ var createJob = function (
   jobDescription,
   numberEmployeesNeeded,
   jobStatus,
+  jobCategory,
   callback
 ) {
   var newJob = {
@@ -41,9 +42,10 @@ var createJob = function (
     jobDescription: jobDescription,
     numberEmployeesNeeded: numberEmployeesNeeded,
     jobStatus: defaultStatus(),
+    jobCategory: jobCategory,
   };
   db.query(
-    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status) values (?,?,?,?,?,?)",
+    "INSERT INTO jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
@@ -51,6 +53,8 @@ var createJob = function (
       newJob.jobDescription,
       newJob.numberEmployeesNeeded,
       newJob.jobStatus,
+      newJob.jobCategory,
+
     ],
     function (err) {
       if (err) {
@@ -93,6 +97,16 @@ var listJobSearched = function (jobTitle, callback) {
   });
 };
 
+var listJobSearchedByCategory = function(jobCategory, callback){
+  db.query("SELECT * FROM jobs WHERE jobCategory = ?", [jobCategory], function (
+    err,
+    rows
+  ){
+    if (err) return callback(err);
+    return callback(null, rows);
+  });
+};
+
 // List all jobs matching a specific userId
 // callback(err, users)
 var listMatchingJobs = function (userId, callback) {
@@ -104,6 +118,8 @@ var listMatchingJobs = function (userId, callback) {
     return callback(null, rows);
   });
 };
+
+
 
 // List all jobs
 // callback(err, jobs)
@@ -135,3 +151,4 @@ exports.createJob = createJob;
 exports.listJobs = listJobs;
 exports.deleteJob = deleteJob;
 exports.updateStatus = updateStatus;
+exports.listJobSearchedByCategory= listJobSearchedByCategory;

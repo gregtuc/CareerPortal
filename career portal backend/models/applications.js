@@ -33,13 +33,14 @@ var createApplication = function (userId, jobId, title, cv, callback) {
     cv: cv,
   };
   db.query(
-    "INSERT INTO applications (applicationId, jobId, userId, title, body) values (?,?,?,?,?)",
+    "INSERT INTO applications (applicationId, jobId, userId, title, description, status) values (?,?,?,?,?,?)",
     [
       newApplication.applicationId,
       newApplication.jobId,
       newApplication.userID,
       newApplication.title,
       newApplication.cv,
+        'Submitted',
     ],
     function (err) {
       if (err) {
@@ -109,6 +110,18 @@ var listApplications = function (callback) {
   });
 };
 
+var listSubmissions = function (employerId , callback) {
+  console.log(employerId);
+  db.query("SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, dateSent \n" +
+      "FROM applications, jobs \n" +
+      "where employerId = ? AND applications.jobId = jobs.jobId",
+      [employerId], function (err, rows) {
+    if (err) return callback(err);
+
+    return callback(null, rows);
+  });
+};
+
 // Delete an application
 // callback(err)
 var deleteApplication = function (applicationId, callback) {
@@ -119,8 +132,79 @@ var deleteApplication = function (applicationId, callback) {
   );
 };
 
+var getApplications = function (applicationId, callback) {
+  db.query(
+      "SELECT numberEmployeesNeeded,jobs.jobId FROM applications, jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
+      [applicationId], function (
+          err,
+          rows
+      ) {
+        if (err) return callback(err);
+        return callback(null, rows);
+      }
+  );
+};
+
+var offerSent = function (applicationId,callback) {
+  db.query(
+      "UPDATE applications SET status = 'Offer Sent' WHERE applicationId = ?",
+      [applicationId], function (
+          err,
+          rows
+      ) {
+        if (err) return callback(err);
+        return callback(null, rows);
+      }
+  );
+};
+
+var takeSpot = function (jobId,callback) {
+  db.query(
+      "UPDATE jobs SET numberEmployeesNeeded = numberEmployeesNeeded - 1 WHERE jobId = ?",
+      [jobId], function (
+          err,
+          rows
+      ) {
+        if (err) return callback(err);
+        return callback(null, rows);
+      }
+      );
+};
+
+var declineOthers = function (applicationId, jobId, callback) {
+  db.query(
+      "UPDATE applications SET status = 'Candidacy not considered' WHERE applicationId != ? AND applications.jobId = ? ",
+      [applicationId, jobId], function (
+          err,
+          rows
+      ) {
+        if (err) return callback(err);
+        return callback(null, rows);
+      }
+  );
+};
+
+var declineApplication = function (applicationId, callback) {
+  db.query(
+      "UPDATE applications SET status = 'Candidacy not considered' WHERE applicationId = ?",
+      [applicationId], function (
+          err,
+          rows
+      ) {
+        if (err) return callback(err);
+        return callback(null, rows);
+      }
+  );
+};
+
 exports.createApplication = createApplication;
 exports.listMatchingApplications = listMatchingApplications;
 exports.listApplicationsSearched = listApplicationsSearched;
 exports.listApplications = listApplications;
 exports.deleteApplication = deleteApplication;
+exports.listSubmissions = listSubmissions;
+exports.getApplications = getApplications;
+exports.offerSent = offerSent;
+exports.takeSpot = takeSpot;
+exports.declineApplication = declineApplication;
+exports.declineOthers = declineOthers;

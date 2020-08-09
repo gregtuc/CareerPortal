@@ -13,12 +13,13 @@ module.exports = function (passport) {
   });
 
   passport.deserializeUser(function (userId, done) {
-    db.query("SELECT * FROM users WHERE userId = ?", [userId], function (
-      err,
-      rows
-    ) {
-      done(err, rows[0]);
-    });
+    db.query(
+      "SELECT * FROM MyDatabase.users WHERE userId = ?",
+      [userId],
+      function (err, rows) {
+        done(err, rows[0]);
+      }
+    );
   });
 
   // Local user signup
@@ -79,7 +80,7 @@ module.exports = function (passport) {
     )
   );
 
-// Local jobseeker signup
+  // Local jobseeker signup
   passport.use(
     "local-jobseeker-signup",
     new LocalStrategy(
@@ -92,7 +93,7 @@ module.exports = function (passport) {
         paymentMethod: "paymentMethod",
         creditCardNumber: "creditcardnumber",
         checkingNumber: "checkingnumber",
-          description: "description",
+        description: "description",
         passReqToCallback: true, // Pass the entire request back to the callback
       },
       function (req, username, password, done) {

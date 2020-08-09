@@ -86,7 +86,7 @@ var createRecruiterUser = function (
             }
             return callback(err);
           }
-          updateMonthlyFee(newUser,accounttype,callback);
+          updateMonthlyFee(newUser, accounttype, callback);
           // Successfully created recruiter. Return the User.
           return callback(null, new User(newUser));
         }
@@ -144,44 +144,47 @@ var signup = function (
   });
 };
 //User will change is category base on what he chose
-var changeCategory = function(user,category,fee,callback) {
-        db.query(
-            "UPDATE Recruiter r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
-            [fee,category,user.userId,user.userId],
-            function (err) {
-                if (err) {
-                    return callback(err);
-                }
-                // Successfully added monthly fee and account balance
-                return callback(null,new User(user));
-            });
-}
-var updateMonthlyFee = function(newUser,category,callback){
-   if (category==="Gold"){
+var changeCategory = function (user, category, fee, callback) {
+  db.query(
+    "UPDATE Recruiter r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
+    [fee, category, user.userId, user.userId],
+    function (err) {
+      if (err) {
+        return callback(err);
+      }
+      // Successfully added monthly fee and account balance
+      return callback(null, new User(user));
+    }
+  );
+};
+var updateMonthlyFee = function (newUser, category, callback) {
+  if (category === "Gold") {
     console.log("Gold Category");
     db.query(
-        "UPDATE users SET monthlyFee = 100 WHERE userId= ?",
-        [newUser.userId],
-        function (err) {
-          if (err) {
-            return callback(err);
-          }
-          // Successfully added monthly fee and accountblance
-          return callback(null,new User(newUser));
-        });
+      "UPDATE users SET monthlyFee = 100 WHERE userId= ?",
+      [newUser.userId],
+      function (err) {
+        if (err) {
+          return callback(err);
+        }
+        // Successfully added monthly fee and accountblance
+        return callback(null, new User(newUser));
+      }
+    );
   } else {
     db.query(
-        "UPDATE users SET monthlyFee = 50 WHERE userId= ?",
-        [newUser.userId],
-        function (err) {
-          if (err) {
-            return callback(err);
-          }
-          // Successfully added monthly fee and accountblance
-          return callback(null,new User(newUser));
-        });
+      "UPDATE users SET monthlyFee = 50 WHERE userId= ?",
+      [newUser.userId],
+      function (err) {
+        if (err) {
+          return callback(err);
+        }
+        // Successfully added monthly fee and accountblance
+        return callback(null, new User(newUser));
+      }
+    );
   }
-}
+};
 // List all recruiters
 // callback(err, users)
 var listMatchingRecruiters = function (userId, callback) {
@@ -192,6 +195,19 @@ var listMatchingRecruiters = function (userId, callback) {
     if (err) return callback(err);
     return callback(null, rows);
   });
+};
+
+// List all recruiters
+// callback(err, users)
+var checkRecruiterAdmin = function (userId, callback) {
+  db.query(
+    "SELECT * FROM Recruiter WHERE userId = ? AND admin = ?",
+    [userId, 1],
+    function (err, rows) {
+      if (err) return callback(err);
+      return callback(null, rows);
+    }
+  );
 };
 
 // List all recruiters
@@ -217,3 +233,4 @@ exports.listRecruiters = listRecruiters;
 exports.deleteRecruiters = deleteRecruiters;
 exports.changeCategory = changeCategory;
 exports.updateMonthlyFee = updateMonthlyFee;
+exports.checkRecruiterAdmin = checkRecruiterAdmin;

@@ -26,7 +26,6 @@
           <td>
               <!-- Trigger the modal with a button -->
               <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#recruiterCategoryModal">Change Category</button>
-
               <!-- Modal -->
               <div id="recruiterCategoryModal" class="modal fade" role="dialog">
                   <div class="modal-dialog">
@@ -55,41 +54,9 @@
                   </div>
               </div>
           </td>
-      </div>
-      <div class="well">
-        <h2>Recruiter Job Posted</h2>
-      {{#each jobs}}
-        <div class="row">
-          <div class="well">
-            <p><strong>Job Id</strong>: {{ jobId }}</p>
-            <p><strong>employerId</strong>: {{ employerId }}</p>
-            <p><strong>Job Title</strong>: {{ jobTitle }}</p>
-            <p><strong>Description</strong>: {{ description }}</p>
-            <p><strong>Number of Employees Needed</strong>: {{ numberEmployeesNeeded }}</p>
-            <p><strong>Date Posted</strong>: {{ datePosted }}</p>
-            <p><strong>Status</strong>: {{ status }}</p>
-              <td><a href="/action/updateStatus/{{this.jobId}}">Change Status to Inactive<span class="glyphicon glyphicon-trash"></span></a></td>
-          </div>
-        </div>
-      {{/each}}
+          <td><a href="/action/delete/{{ recruiter.userId }}">Delete profile<span class="glyphicon glyphicon-trash"></span></a></td>
       </div>
 
-      <div class="well">
-        <h2>Jobseekers Application</h2>
-      {{#each applications}}
-        <div class="row">
-          <div class="well">
-            <p><strong>Application Id</strong>: {{ applicationId }}</p>
-            <p><strong>jobId</strong>: {{ jobId }}</p>
-            <p><strong>userId</strong>: {{ userId }}</p>
-            <p><strong>Title</strong>: {{ title }}</p>
-            <p><strong>Body</strong>: {{ body }}</p>
-            <p><strong>Status</strong>: {{ status }}</p>
-            <p><strong>Date Posted</strong>: {{ dateSent }}</p>
-          </div>
-        </div>
-      {{/each}}
-      </div>
     </div>
   </body>
 </html>

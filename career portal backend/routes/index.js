@@ -31,6 +31,7 @@ module.exports = function (app) {
                 numberEmployeesNeeded: row.numberEmployeesNeeded,
                 datePosted: row.datePosted,
                 status: row.status,
+                jobCategory: row.jobCategory,
               });
             });
           }
@@ -44,13 +45,13 @@ module.exports = function (app) {
       } else {
         //If user not found in recruiters table, render the users profile page.
         jobseeker.listMatchingJobseeker(req.user.userId, function (
-            err,
-            userRows
+          err,
+          userRows
         ) {
           //Check if user is a PrimeUser
           jobseeker.listMatchingPrimeUser(req.user.userId, function (
-              err,
-              prime
+            err,
+            prime
           ) {
             if (prime.length) {
               res.render("userprofileprime", {
@@ -61,8 +62,8 @@ module.exports = function (app) {
             } else {
               //if not a prime user,check if user is a GoldUser
               jobseeker.listMatchingGoldUser(req.user.userId, function (
-                  err,
-                  gold
+                err,
+                gold
               ) {
                 if (gold.length) {
                   res.render("userprofilegold", {
@@ -85,28 +86,30 @@ module.exports = function (app) {
     });
   });
 
-
   app.get("/action/updateStatus/:jobId", auth.requireLogin, function (
-      req,
-      res,
-      next
+    req,
+    res,
+    next
   ) {
     job.updateStatus(req.params.jobId, function (err) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/profile");
+        res.redirect("/viewjoblistings");
       }
     });
   });
+
+
+
   app.post("/changeCategory", auth.requireLogin, function (req, res) {
-    if (req.body.accounttype === "Gold")
-      var newfee = 20;
-    else if (req.body.accounttype === "Prime")
-      var newfee = 10;
-    else
-      var newfee = 0;
-    jobseeker.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
+    if (req.body.accounttype === "Gold") var newfee = 20;
+    else if (req.body.accounttype === "Prime") var newfee = 10;
+    else var newfee = 0;
+    jobseeker.changeCategory(req.user, req.body.accounttype, newfee, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -116,11 +119,12 @@ module.exports = function (app) {
   });
 
   app.post("/changeCategoryRecruiter", auth.requireLogin, function (req, res) {
-    if (req.body.accounttype === "Gold")
-      var newfee = 100;
-    else
-      var newfee = 50;
-    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (err, rows) {
+    if (req.body.accounttype === "Gold") var newfee = 100;
+    else var newfee = 50;
+    recruiter.changeCategory(req.user, req.body.accounttype, newfee, function (
+      err,
+      rows
+    ) {
       if (err) {
         console.log(err);
       } else {
@@ -134,18 +138,19 @@ module.exports = function (app) {
   //their quota depending on their membership, and rejects them if they have.
   app.post("/createjob", auth.requireLogin, function (req, res, next) {
     job.createJob(
-        req.user.userId,
-        req.body.jobTitle,
-        req.body.jobDescription,
-        req.body.numberEmployeesNeeded,
-        req.body.status,
-        function (err) {
-          if (err) {
-            console.log(err);
-          } else {
-            res.redirect("/profile");
-          }
+      req.user.userId,
+      req.body.jobTitle,
+      req.body.jobDescription,
+      req.body.numberEmployeesNeeded,
+      req.body.status,
+      req.body.jobCategory,
+      function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/profile");
         }
+      }
     );
   });
 
@@ -162,10 +167,36 @@ module.exports = function (app) {
             numberEmployeesNeed: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
-      res.render("jobfeed", {user: req.user, jobs: jobs});
+      res.render("jobfeed", { user: req.user, jobs: jobs });
+    });
+  });
+
+  app.post("/searchJobByCategory", auth.requireLogin, function (
+    req,
+    res,
+    next
+  ) {
+    job.listJobSearchedByCategory(req.body.jobCategory, function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeed: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+            jobCategory: row.jobCategory,
+          });
+        });
+      }
+      res.render("jobfeed", { user: req.user, jobs: jobs });
     });
   });
 
@@ -184,12 +215,35 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
-      res.render("explorepage", {user: req.user, jobs: jobs});
+      res.render("explorepage", { user: req.user, jobs: jobs });
     });
   });
+
+  app.get("/viewJobListings", auth.requireLogin, function (req, res, next) {
+    job.listJobs(function (err, rows) {
+      var jobs = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          jobs.push({
+            jobId: row.jobId,
+            userId: row.userId,
+            jobTitle: row.jobTitle,
+            description: row.description,
+            numberEmployeesNeeded: row.numberEmployeesNeeded,
+            datePosted: row.datePosted,
+            status: row.status,
+            jobCategory: row.jobCategory,
+          });
+        });
+      }
+      res.render("viewjoblistings", { user: req.user, jobs: jobs });
+    });
+  });
+
 
   //Endpoint for getting all jobs that the active user has posted, and return it as an object
   //for the page.
@@ -206,22 +260,27 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             jobStatus: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
-      res.render("recruiterprofile", {user: req.user, jobs: jobs});
+      res.render("recruiterprofile", { user: req.user, jobs: jobs });
     });
   });
 
-  app.get("/admin", auth.requireLogin, function (req, res, next) {
+  app.get("/admin", auth.requireLogin, auth.requireAdmin, function (
+    req,
+    res,
+    next
+  ) {
     user.listUsers(function (err, rows) {
       var users = [];
       if (!err) {
         rows.forEach(function (row) {
-          users.push({userId: row.userId, email: row.email});
+          users.push({ userId: row.userId, email: row.email });
         });
       }
-      res.render("admin", {user: req.user, users: users});
+      res.render("admin", { user: req.user, users: users });
     });
   });
 
@@ -238,10 +297,11 @@ module.exports = function (app) {
             numberEmployeesNeeded: row.numberEmployeesNeeded,
             datePosted: row.datePosted,
             status: row.status,
+            jobCategory: row.jobCategory,
           });
         });
       }
-      res.render("adminmanagejobs", {jobs: req.jobs, jobs: jobs});
+      res.render("adminmanagejobs", { jobs: req.jobs, jobs: jobs });
     });
   });
 
@@ -269,9 +329,9 @@ module.exports = function (app) {
   });
 
   app.get("/action/delete/:userId", auth.requireLogin, function (
-      req,
-      res,
-      next
+    req,
+    res,
+    next
   ) {
     if (req.user.userId === req.params.userId) {
       // If the user is trying to delete their own account, log them out first
@@ -282,8 +342,8 @@ module.exports = function (app) {
       if (err) {
         console.error(err);
       }
-        res.redirect("/admin");
-      });
+      res.redirect("/admin");
+    });
   });
 
   app.get("/action/promote/:userId", auth.requireLogin, function (
@@ -361,7 +421,10 @@ module.exports = function (app) {
   );
 
   app.get("/viewapplications", auth.requireLogin, function (req, res, next) {
-    applications.listMatchingApplications(req.user.userId , function (err, rows) {
+    applications.listMatchingApplications(req.user.userId, function (
+      err,
+      rows
+    ) {
       var applications = [];
       if (!err) {
         rows.forEach(function (row) {
@@ -383,20 +446,87 @@ module.exports = function (app) {
     });
   });
 
+  app.get("/viewsubmissions", auth.requireLogin, function (req, res, next) {
+    applications.listSubmissions(req.user.userId , function (err, rows) {
+      var applications = [];
+      if (!err) {
+        rows.forEach(function (row) {
+          applications.push({
+            applicationId: row.applicationId,
+            jobTitle: row.jobTitle,
+            title: row.title,
+            description: row.description,
+            status: row.status,
+            jobCategory: row.jobCategory,
+            dateSent: row.dateSent,
+          });
+        });
+      }
+      res.render("viewsubmissions", {
+        applications: req.applications,
+        jobs: applications,
+      });
+    });
+  });
+
   app.get(
-      "/action/withdrawapplication/:applicationId",
+    "/action/withdrawapplication/:applicationId",
+    auth.requireLogin,
+    function (req, res, next) {
+      applications.deleteApplication(req.params.applicationId, function (err) {
+        if (err) {
+          console.error(err);
+        }
+        res.redirect("/viewapplications");
+      });
+    }
+  );
+
+  app.get(
+      "/action/declineapplication/:applicationId",
       auth.requireLogin,
       function (req, res, next) {
-        applications.deleteApplication(req.params.applicationId, function (err) {
+        applications.declineApplication(req.params.applicationId, function (err) {
           if (err) {
             console.error(err);
           }
-          res.redirect("/viewapplications");
+          res.redirect("/viewsubmissions");
         });
       }
   );
 
+  app.get("/action/acceptapplication/:applicationId", auth.requireLogin, function (req, res, next) {
+    var newCount;
+    var jobId;
+    applications.getApplications(req.params.applicationId, function (
+        err,
+        rows
+    ) {
+      newCount = rows[0].numberEmployeesNeeded - 1;
+      jobId = rows[0].jobId;
+      if(newCount == 0){
+        applications.takeSpot(jobId,function(err,rows) {
+          applications.offerSent(req.params.applicationId,function(err,rows) {
+            applications.declineOthers(req.params.applicationId, jobId,function(err,rows) {
 
+
+              res.redirect("/viewsubmissions");
+            });
+          });
+        });
+      }else{
+        applications.takeSpot(jobId,function(err,rows) {
+          applications.offerSent(req.params.applicationId,function(err,rows) {
+            res.redirect("/viewsubmissions");
+          });
+        });
+      }
+
+
+
+    });
+
+  });
 
   app.post("/createApplication", auth.requireLogin, function (req, res, next) {
     applications.createApplication(
@@ -412,5 +542,26 @@ module.exports = function (app) {
         }
       }
     );
+  });
+
+  app.get("/forgotpassword", function (req, res, next) {
+    res.render("forgotpassword");
+  });
+
+  app.post("/resetpassword", function (req, res, next) {
+    user.listMatchingUsersForRecovery(
+      req.body.email,
+      req.body.recoveryanswer,
+      function (err) {
+        if (err) {
+          console.log(err);
+        }
+      }
+    );
+    res.render("index");
+  });
+
+  app.get("/contactus", function (req, res, next) {
+    res.render("contactus");
   });
 };

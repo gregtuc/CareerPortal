@@ -1,6 +1,6 @@
 var bcrypt = require("bcrypt-nodejs");
 var uuidV4 = require("uuid/v4");
-
+var nodemailer = require("nodemailer");
 var db = require("./db");
 
 // Set up User class
@@ -104,9 +104,12 @@ var login = function (req, email, password, callback) {
       );
     if (rows[0].frozen)
       return callback(
-          null,
-          false,
-          req.flash("loginMessage", "Your account is frozen. Please contact an administrator")
+        null,
+        false,
+        req.flash(
+          "loginMessage",
+          "Your account is frozen. Please contact an administrator"
+        )
       );
 
     // User successfully logged in, return user
@@ -124,11 +127,68 @@ var listUsers = function (callback) {
   });
 };
 
+// List all users matching a specific userId
+// callback(err, users)
+var listMatchingUsersForRecovery = function (email, recoveryanswer, callback) {
+  db.query(
+    "SELECT * FROM users WHERE email = ? AND accountRecoveryAnswer = ?",
+    [email, recoveryanswer],
+    function (err, rows) {
+      if (err) return callback(err);
+      if (rows.length) {
+        //If a match is found, first create a new password for the account.
+        var randomstring = Math.random().toString(30).slice(-8);
+        var hashedRandomString = hashPassword(randomstring);
+
+        //Next, update the user's password with the new password.
+        db.query(
+          "UPDATE users SET password = ? WHERE email = ?",
+          [hashedRandomString, email],
+          function (err) {
+            if (err) return callback(err);
+
+            //Finally, send an email to the user containing their new password.
+            //Dispatch
+            var transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: "353groupproject@gmail.com",
+                pass: "qiuygbpggbjbsvet",
+              },
+            });
+
+            //For multiple Recipients
+            var mailOptions = {
+              from: "353groupproject@gmail.com",
+              to: email,
+              subject: "Your new password for CareerPortal.",
+              text:
+                "You have requested a new password for your CareerPortal account. It is " +
+                randomstring,
+            };
+
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("Email sent: " + info.response);
+              }
+            });
+          }
+        );
+      }
+    }
+  );
+};
+
 // Delete a user
 // callback(err)
 var deleteUser = function (userId, callback) {
   console.log(userId);
-  db.query("DELETE FROM users WHERE userId = ?", [userId], function (err, rows) {
+  db.query("DELETE FROM users WHERE userId = ?", [userId], function (
+    err,
+    rows
+  ) {
     if (err) return callback(err);
 
     return callback(null);
@@ -137,12 +197,20 @@ var deleteUser = function (userId, callback) {
 
 var promoteUser = function (userId, callback) {
   console.log(userId);
-  db.query("UPDATE recruiter SET admin = 1 WHERE userId = ?", [userId], callback);
+  db.query(
+    "UPDATE recruiter SET admin = 1 WHERE userId = ?",
+    [userId],
+    callback
+  );
 };
 
 var demoteUser = function (userId, callback) {
   console.log(userId);
-  db.query("UPDATE recruiter SET admin = 0 WHERE userId = ?", [userId], callback);
+  db.query(
+    "UPDATE recruiter SET admin = 0 WHERE userId = ?",
+    [userId],
+    callback
+  );
 };
 
 var lock = function (userId, callback) {
@@ -163,3 +231,4 @@ exports.promoteUser = promoteUser;
 exports.demoteUser = demoteUser;
 exports.lock = lock;
 exports.unlock = unlock;
+exports.listMatchingUsersForRecovery = listMatchingUsersForRecovery;
