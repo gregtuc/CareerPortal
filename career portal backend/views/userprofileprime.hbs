@@ -12,7 +12,8 @@
 
     <div class="well">
         <p><strong>User ID</strong>: {{ user.userId }}</p>
-        <p><strong>Prime user since</strong>: {{ prime.signUpDate }}</p>
+        <p><strong>Prime user since</strong>: {{ jobseeker.signUpDate }}</p>
+        <p><strong>Job applied (Max=5)</strong>: {{ jobseeker.numberJobsApplied }}</p>
         <p><strong>Email</strong>: {{ user.email }}</p>
         <p><strong>Payment Type</strong>: {{ user.autoOrManual }} {{> PaymentTypeModal}}</p>
         <p><strong>Payment Method</strong>: {{ user.paymentMethod }} {{> PaymentMethodModal}}</p>
