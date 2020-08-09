@@ -95,7 +95,7 @@ module.exports = function (app) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/profile");
+        res.redirect("/viewjoblistings");
       }
     });
   });
@@ -223,7 +223,7 @@ module.exports = function (app) {
     });
   });
 
-  app.post("/viewJobListings", auth.requireLogin, function (req, res, next) {
+  app.get("/viewJobListings", auth.requireLogin, function (req, res, next) {
     job.listJobs(function (err, rows) {
       var jobs = [];
       if (!err) {
