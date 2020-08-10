@@ -2,28 +2,183 @@
 <html>
   <head>
     <title>Profile</title>
+
+      <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+      <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
     {{> userhead}}
   </head>
-  <body>
-    <div class="container">
-      <div class="page-header text-center">
-        <h1>User Profile</h1>
-      </div>
+<!--  <body>-->
+<!--    <div class="container">-->
+<!--      <div class="page-header text-center">-->
+<!--        <h1>User Profile</h1>-->
+<!--      </div>-->
 
-      <div class="well">
-        <p><strong>User ID</strong>: {{ user.userId }}</p>
-        <p><strong>Email</strong>: {{ user.email }}</p>
-        <p><strong>Payment Type</strong>: {{ user.autoOrManual }} {{> PaymentTypeModal}}</p>
-        <p><strong>Payment Method</strong>: {{ user.paymentMethod }} {{> PaymentMethodModal}}</p>
-        <p><strong>Credit Number</strong>: {{ user.creditNo }}{{> CreditNumberModal}}</p>
-        <p><strong>Checking Number</strong>: {{ user.checkingNo }}{{> CheckingNumberModal}}</p>
-          <p><strong>Monthly fee</strong>: {{ user.monthlyFee }}</p>
-          <p><strong>Account Balance</strong>: {{ user.accountBalance }}{{> PaymentModal}}</p>
-        <p><strong>Recovery Answer</strong>: {{ user.accountRecoveryAnswer }}{{> RecoveryAnswerModal}}</p>
-        <p><strong>Job Seeker Category</strong>: {{ jobseeker.category }} {{> userCategoryModal}} </p>
-          <p><strong>About me</strong>: {{ jobseeker.profileDescription }}</p>
-          <td><a href="/action/delete/{{ user.userId }}">Delete profile<span class="glyphicon glyphicon-trash"></span></a></td>
-      </div>
+<!--      <div class="well">-->
+<!--        <p><strong>User ID</strong>: { user.userId }}</p>-->
+<!--        <p><strong>Email</strong>: { user.email }}</p>-->
+<!--        <p><strong>Payment Type</strong>: { user.autoOrManual }}</p>-->
+<!--        <p><strong>Payment Method</strong>: { user.paymentMethod }}</p>-->
+<!--        <p><strong>Credit Number</strong>: { user.creditNo }}</p>-->
+<!--        <p><strong>Checking Number</strong>: { user.checkingNo }}</p>-->
+<!--          <p><strong>Monthly fee</strong>: { user.monthlyFee }}</p>-->
+<!--          <p><strong>Account Balance</strong>: { user.accountBalance }}{> PaymentModal}}</p>-->
+<!--        <p><strong>Recovery Answer</strong>: { user.accountRecoveryAnswer }}</p>-->
+<!--        <p><strong>Job Seeker Category</strong>: { jobseeker.category }} </p>-->
+<!--          <p><strong>About me</strong>: { jobseeker.profileDescription }}</p>-->
+<!--          <td><a href="/action/delete/{ user.userId }}">Delete profile<span class="glyphicon glyphicon-trash"></span></a></td>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    {> userfooter}}-->
+<!--  </body>-->
+<!--</html>-->
+
+<body>
+<div class="container main-secction">
+    <div class="row">
+        <div class="row user-left-part">
+            <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
+                <div class="row ">
+                    <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center">
+                        <img src="https://www.jamf.com/jamf-nation/img/default-avatars/generic-user-purple.png" class="rounded-circle">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+                        <br/>
+                        <form action="/viewapplications" method="get"><button type="submit" class="btn btn-info">View my Applications</button></form>
+                        <br/>
+                    </div>
+                    <div class="row user-detail-row">
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section">
+                <div class="row profile-right-section-row">
+                    <div class="col-md-12 profile-header">
+                        <div class="row">
+                            <div class="col-md-5 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                <h1>{{ user.email }}</h1>
+                                <h5>{{ user.userId }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#profile" role="tab" data-toggle="tab"><i class="fas fa-user-circle"></i> Account information</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#buzz" role="tab" data-toggle="tab"><i class="fas fa-info-circle"></i> Payment Info</a>
+                                    </li>
+                                </ul>
+
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade show active" id="profile">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Category</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{ jobseeker.category }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Recovery Answer</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <p>{{ user.accountRecoveryAnswer }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>About me</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p>{{ jobseeker.profileDescription }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="buzz">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Payment Type</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.autoOrManual }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Payment Method</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.paymentMethod }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Credit Number</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.creditNo }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Checking Number</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.checkingNo }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Monthly fee</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.monthlyFee }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>Account Balance</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p>{{ user.accountBalance }} {{> PaymentModal}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 img-main-rightPart">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row image-right-part">
+                                            <div class="col-md-6 pull-left image-right-detail">
+<!--                                                <h6>SPONSOR</h6>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-md-12 image-right">
+                                            <img src="http://pluspng.com/img-png/bootstrap-png-bootstrap-512.png">
+                                        </div>
+                                    <div class="col-md-12 image-right-detail-section2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </body>
-</html>
+</div>
+{{> userfooter}}
+</body>
