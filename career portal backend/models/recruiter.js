@@ -146,7 +146,7 @@ var signup = function (
 //User will change is category base on what he chose
 var changeCategory = function (user, category, fee, callback) {
   db.query(
-    "UPDATE MyDatabase.Recruiter r INNER JOIN users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
+    "UPDATE MyDatabase.Recruiter r INNER JOIN MyDatabase.users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
     [fee, category, user.userId, user.userId],
     function (err) {
       if (err) {

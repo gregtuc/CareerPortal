@@ -5,6 +5,7 @@ var job = require("../models/job");
 var auth = require("../utils/auth");
 var applications = require("../models/applications");
 var systeminfo = require("../models/systeminfo");
+const cron = require("node-cron");
 const { application } = require("express");
 
 // Main routes for app
@@ -189,7 +190,7 @@ module.exports = function (app) {
 
   //user's payment
   app.post("/userPayment", auth.requireLogin, function (req, res) {
-    jobseeker.userPayment(req.user, req.body.paymentammount, function (
+    jobseeker.userPayment(req.user, req.body.paymentamount, function (
       err,
       rows
     ) {
@@ -659,6 +660,38 @@ module.exports = function (app) {
           user: req.user,
           systeminfo: sysactivities,
         });
+      }
+    });
+  });
+
+  // sending emails at periodic intervals
+  cron.schedule("0 0 1 * *", function () {
+    console.log("---------------------");
+    console.log("It's pay day baby! Users will now empty their coffers");
+    //Finally, send an email to the user containing their new password.
+    //Dispatch
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "353groupproject@gmail.com",
+        pass: "qiuygbpggbjbsvet",
+      },
+    });
+
+    //For multiple Recipients
+    var mailOptions = {
+      from: "353groupproject@gmail.com",
+      to: email,
+      subject: "We have extracted money from your account.",
+      text:
+        "It was pay day and we charged you with your selected payment option. Sincerely, CareerPortal.",
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
       }
     });
   });
