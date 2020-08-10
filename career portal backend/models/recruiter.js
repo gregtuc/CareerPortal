@@ -55,7 +55,7 @@ var createRecruiterUser = function (
     checkingnumber: checkingnumber,
   };
   db.query(
-    "INSERT INTO MyDatabase.users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo,monthlyFee,accountBalance) values (?,?,?,?,?,?,?,?,0,0)",
+    "INSERT INTO pyc353_1.users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo,monthlyFee,accountBalance) values (?,?,?,?,?,?,?,?,0,0)",
     [
       newUser.userId,
       newUser.email,
@@ -76,7 +76,7 @@ var createRecruiterUser = function (
       }
       // If phone number was passed, create Recruiter and then return the User.
       db.query(
-        "INSERT INTO MyDatabase.Recruiter ( userId, phoneNo, employerCategory ) values (?,?,?)",
+        "INSERT INTO pyc353_1.Recruiter ( userId, phoneNo, employerCategory ) values (?,?,?)",
         [newUser.userId, phonenumber, accounttype],
         function (err) {
           if (err) {
@@ -111,7 +111,7 @@ var signup = function (
   callback
 ) {
   // Check if there's already a user with that email
-  db.query("SELECT * FROM MyDatabase.users WHERE email = ?", [email], function (
+  db.query("SELECT * FROM pyc353_1.users WHERE email = ?", [email], function (
     err,
     rows
   ) {
@@ -146,7 +146,7 @@ var signup = function (
 //User will change is category base on what he chose
 var changeCategory = function (user, category, fee, callback) {
   db.query(
-    "UPDATE MyDatabase.Recruiter r INNER JOIN MyDatabase.users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
+    "UPDATE pyc353_1.Recruiter r INNER JOIN pyc353_1.users u ON (r.userId=u.userId) SET u.monthlyFee=?, r.employerCategory = ? WHERE r.userId= ? AND u.userId=?",
     [fee, category, user.userId, user.userId],
     function (err) {
       if (err) {
@@ -161,7 +161,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
   if (category === "Gold") {
     console.log("Gold Category");
     db.query(
-      "UPDATE MyDatabase.users SET monthlyFee = 100 WHERE userId= ?",
+      "UPDATE pyc353_1.users SET monthlyFee = 100 WHERE userId= ?",
       [newUser.userId],
       function (err) {
         if (err) {
@@ -173,7 +173,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
     );
   } else {
     db.query(
-      "UPDATE MyDatabase.users SET monthlyFee = 50 WHERE userId= ?",
+      "UPDATE pyc353_1.users SET monthlyFee = 50 WHERE userId= ?",
       [newUser.userId],
       function (err) {
         if (err) {
@@ -189,7 +189,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
 // callback(err, users)
 var listMatchingRecruiters = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.Recruiter WHERE userId = ?",
+    "SELECT * FROM pyc353_1.Recruiter WHERE userId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -202,7 +202,7 @@ var listMatchingRecruiters = function (userId, callback) {
 // callback(err, users)
 var checkRecruiterAdmin = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.Recruiter WHERE userId = ? AND admin = ?",
+    "SELECT * FROM pyc353_1.Recruiter WHERE userId = ? AND admin = ?",
     [userId, 1],
     function (err, rows) {
       if (err) return callback(err);
@@ -214,7 +214,7 @@ var checkRecruiterAdmin = function (userId, callback) {
 // List all recruiters
 // callback(err, users)
 var listRecruiters = function (callback) {
-  db.query("SELECT * FROM MyDatabase.Recruiter", [], function (err, rows) {
+  db.query("SELECT * FROM pyc353_1.Recruiter", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -225,7 +225,7 @@ var listRecruiters = function (callback) {
 // callback(err)
 var deleteRecruiters = function (userId, callback) {
   db.query(
-    "DELETE FROM MyDatabase.Recruiter WHERE userId = ?",
+    "DELETE FROM pyc353_1.Recruiter WHERE userId = ?",
     [userId],
     callback
   );

@@ -9,6 +9,7 @@ pool.getConnection(function (err, conn) {
   if (err) throw err; // You *MUST* handle err and not continue execution if
   // there is an error. this is a standard part of Node.js
   conn.query("USE " + dbconfig.database, function () {
+    console.log("Querying...");
     conn.release();
   });
 });
@@ -16,6 +17,7 @@ pool.getConnection(function (err, conn) {
 // Returns a connection to the db
 var getConnection = function (callback) {
   pool.getConnection(function (err, conn) {
+    console.log("Pinging database connection...");
     callback(err, conn);
   });
 };

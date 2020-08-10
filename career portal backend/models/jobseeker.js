@@ -55,7 +55,7 @@ var createJobSeekerUser = function (
     checkingnumber: checkingnumber,
   };
   db.query(
-    "INSERT INTO MyDatabase.users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo,monthlyFee,accountBalance) values (?,?,?,?,?,?,?,?,0,0)",
+    "INSERT INTO pyc353_1.users ( userId, email, password, accountRecoveryAnswer, autoOrManual, paymentMethod, creditNo, checkingNo,monthlyFee,accountBalance) values (?,?,?,?,?,?,?,?,0,0)",
     [
       newUser.userId,
       newUser.email,
@@ -76,7 +76,7 @@ var createJobSeekerUser = function (
       }
       // Create new jobseeker.
       db.query(
-        "INSERT INTO MyDatabase.JobSeeker ( userId,category,profileDescription ) values (?,?,?)",
+        "INSERT INTO pyc353_1.JobSeeker ( userId,category,profileDescription ) values (?,?,?)",
         [newUser.userId, accounttype, description],
         function (err) {
           if (err) {
@@ -87,17 +87,14 @@ var createJobSeekerUser = function (
             return callback(err);
           }
           // If the job seeker is a prime user, create new prime user.
-          if(accounttype==="Prime")
-          {
-                      updateMonthlyFee(newUser,accounttype,callback);
-                      // Successfully created JobSeeker as prime user. Return the User.
-                      return callback(null, new User(newUser));
-        }
-          else if(accounttype==="Gold")
-          {
-                  // Successfully created JobSeeker as Gold user. Return the User.
-                    updateMonthlyFee(newUser,accounttype,callback);
-                  return callback(null, new User(newUser));
+          if (accounttype === "Prime") {
+            updateMonthlyFee(newUser, accounttype, callback);
+            // Successfully created JobSeeker as prime user. Return the User.
+            return callback(null, new User(newUser));
+          } else if (accounttype === "Gold") {
+            // Successfully created JobSeeker as Gold user. Return the User.
+            updateMonthlyFee(newUser, accounttype, callback);
+            return callback(null, new User(newUser));
           } else {
             return callback(null, new User(newUser));
           }
@@ -123,7 +120,7 @@ var signup = function (
   callback
 ) {
   // Check if there's already a user with that email
-  db.query("SELECT * FROM MyDatabase.users WHERE email = ?", [email], function (
+  db.query("SELECT * FROM pyc353_1.users WHERE email = ?", [email], function (
     err,
     rows
   ) {
@@ -159,7 +156,7 @@ var signup = function (
 //User will change is category base on what he chose
 var changeCategory = function (user, category, fee, callback) {
   db.query(
-    "UPDATE MyDatabase.JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET r.signUpDate = CURRENT_TIMESTAMP,u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
+    "UPDATE pyc353_1.JobSeeker r INNER JOIN users u ON (r.userId=u.userId) SET r.signUpDate = CURRENT_TIMESTAMP,u.monthlyFee=?, r.category = ? WHERE r.userId= ? AND u.userId=?",
     [fee, category, user.userId, user.userId],
     function (err) {
       if (err) {
@@ -187,7 +184,7 @@ var changePaymentType = function (user, type, callback) {
 //User will change is paymentMethod base on what he chose
 var changePaymentMethod = function (user, method, callback) {
   db.query(
-    "UPDATE MyDatabase.users SET paymentMethod= ? WHERE userId= ?",
+    "UPDATE pyc353_1.users SET paymentMethod= ? WHERE userId= ?",
     [method, user.userId],
     function (err) {
       if (err) {
@@ -201,7 +198,7 @@ var changePaymentMethod = function (user, method, callback) {
 //User will change is credit number base on what he chose
 var changeCreditNb = function (user, nb, callback) {
   db.query(
-    "UPDATE MyDatabase.users SET creditNo= ? WHERE userId= ?",
+    "UPDATE pyc353_1.users SET creditNo= ? WHERE userId= ?",
     [nb, user.userId],
     function (err) {
       if (err) {
@@ -215,7 +212,7 @@ var changeCreditNb = function (user, nb, callback) {
 //User will change is checking number base on what he chose
 var changeCheckingNb = function (user, nb, callback) {
   db.query(
-    "UPDATE MyDatabase.users SET checkingNo= ? WHERE userId= ?",
+    "UPDATE pyc353_1.users SET checkingNo= ? WHERE userId= ?",
     [nb, user.userId],
     function (err) {
       if (err) {
@@ -229,7 +226,7 @@ var changeCheckingNb = function (user, nb, callback) {
 //User will change is recovery answer base on what he chose
 var changeRecoveryAnswer = function (user, answer, callback) {
   db.query(
-    "UPDATE MyDatabase.users SET accountRecoveryAnswer= ? WHERE userId= ?",
+    "UPDATE pyc353_1.users SET accountRecoveryAnswer= ? WHERE userId= ?",
     [answer, user.userId],
     function (err) {
       if (err) {
@@ -243,7 +240,7 @@ var changeRecoveryAnswer = function (user, answer, callback) {
 //User will pay his desired amount
 var userPayment = function (user, amount, callback) {
   db.query(
-    "UPDATE MyDatabase.users SET accountBalance = accountBalance - ? WHERE userId= ?",
+    "UPDATE pyc353_1.users SET accountBalance = accountBalance - ? WHERE userId= ?",
     [amount, user.userId],
     function (err) {
       if (err) {
@@ -255,11 +252,10 @@ var userPayment = function (user, amount, callback) {
   );
 };
 
-
 var updateMonthlyFee = function (newUser, category, callback) {
   if (category === "Prime") {
     db.query(
-      "UPDATE MyDatabase.users SET monthlyFee = 10 WHERE userId= ?",
+      "UPDATE pyc353_1.users SET monthlyFee = 10 WHERE userId= ?",
       [newUser.userId],
       function (err) {
         if (err) {
@@ -272,7 +268,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
   } else if (category === "Gold") {
     console.log("Gold Category");
     db.query(
-      "UPDATE MyDatabase.users SET monthlyFee = 20 WHERE userId= ?",
+      "UPDATE pyc353_1.users SET monthlyFee = 20 WHERE userId= ?",
       [newUser.userId],
       function (err) {
         if (err) {
@@ -285,7 +281,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
   } else {
     console.log("Basic Category");
     db.query(
-      "UPDATE MyDatabase.users SET monthlyFee = 0 WHERE userId= ?",
+      "UPDATE pyc353_1.users SET monthlyFee = 0 WHERE userId= ?",
       [newUser.userId],
       function (err) {
         if (err) {
@@ -301,7 +297,7 @@ var updateMonthlyFee = function (newUser, category, callback) {
 // callback(err, users)
 var listMatchingJobseeker = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.JobSeeker WHERE userId = ?",
+    "SELECT * FROM pyc353_1.JobSeeker WHERE userId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -315,7 +311,7 @@ var listMatchingJobseeker = function (userId, callback) {
 // callback(err, users)
 var listMatchingPrimeUser = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.PrimeUser WHERE userId = ?",
+    "SELECT * FROM pyc353_1.PrimeUser WHERE userId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -329,7 +325,7 @@ var listMatchingPrimeUser = function (userId, callback) {
 // callback(err, users)
 var listMatchingGoldUser = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.GoldUser WHERE userId = ?",
+    "SELECT * FROM pyc353_1.GoldUser WHERE userId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -342,7 +338,7 @@ var listMatchingGoldUser = function (userId, callback) {
 // List all Jobseeker
 // callback(err, users)
 var listJobseekers = function (callback) {
-  db.query("SELECT * FROM MyDatabase.JobSeeker", [], function (err, rows) {
+  db.query("SELECT * FROM pyc353_1.JobSeeker", [], function (err, rows) {
     if (err) return callback(err);
     return callback(null, rows);
   });

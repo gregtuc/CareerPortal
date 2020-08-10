@@ -2,10 +2,9 @@
 module.exports = {
   connection: {
     host: "localhost",
-    user: "root",
-    password: "root",
-    queueLimit: 0, // unlimited queueing
-    connectionLimit: 0, // unlimited connections
+    user: "pyc353_1",
+    password: "datab123",
+    port: 12000,
   },
-  database: "MyDatabase",
+  database: "pyc353_1",
 };

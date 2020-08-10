@@ -33,7 +33,7 @@ var createApplication = function (userId, jobId, title, cv, callback) {
     cv: cv,
   };
   db.query(
-    "INSERT INTO MyDatabase.applications (applicationId, jobId, userId, title, description, status) values (?,?,?,?,?,?)",
+    "INSERT INTO pyc353_1.applications (applicationId, jobId, userId, title, description, status) values (?,?,?,?,?,?)",
     [
       newApplication.applicationId,
       newApplication.jobId,
@@ -67,7 +67,7 @@ var createApplication = function (userId, jobId, title, cv, callback) {
 
 var updateApplicationPostCount = function (newApplication, callback) {
   db.query(
-    "UPDATE MyDatabase.JobSeeker SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
+    "UPDATE pyc353_1.JobSeeker SET numberJobsApplied = numberJobsApplied + 1 WHERE userId = ?",
     [newApplication.userID],
     function (err) {
       if (err) {
@@ -82,7 +82,7 @@ var updateApplicationPostCount = function (newApplication, callback) {
 // List all applications matching a specific userId
 var listMatchingApplications = function (userId, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.applications WHERE userId = ?",
+    "SELECT * FROM pyc353_1.applications WHERE userId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -94,7 +94,7 @@ var listMatchingApplications = function (userId, callback) {
 // List all applications matching a specific title
 var listApplicationsSearched = function (title, callback) {
   db.query(
-    "SELECT * FROM MyDatabase.applications WHERE title = ?",
+    "SELECT * FROM pyc353_1.applications WHERE title = ?",
     [title],
     function (err, rows) {
       if (err) return callback(err);
@@ -105,7 +105,7 @@ var listApplicationsSearched = function (title, callback) {
 
 // List all applications (Not sure if this is needed)
 var listApplications = function (callback) {
-  db.query("SELECT * FROM MyDatabase.applications", [], function (err, rows) {
+  db.query("SELECT * FROM pyc353_1.applications", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -116,7 +116,7 @@ var listSubmissions = function (employerId, callback) {
   console.log(employerId);
   db.query(
     "SELECT applicationId, jobTitle, title,applications.description, applications.status, jobCategory, numberEmployeesNeeded \n" +
-      "FROM MyDatabase.applications, MyDatabase.jobs \n" +
+      "FROM pyc353_1.applications, pyc353_1.jobs \n" +
       "where employerId = ? AND applications.jobId = jobs.jobId",
     [employerId],
     function (err, rows) {
@@ -129,34 +129,32 @@ var listSubmissions = function (employerId, callback) {
 
 // Delete an application
 // callback(err)
-var deleteApplication = function (applicationId,userId, callback) {
+var deleteApplication = function (applicationId, userId, callback) {
   db.query(
-    "DELETE FROM MyDatabase.applications WHERE applicationId = ?",
+    "DELETE FROM pyc353_1.applications WHERE applicationId = ?",
     [applicationId],
-    function (err)
-    {
-        if(err)
-            callback(err);
-        return decreaseApplicationPostCount(userId,callback)
+    function (err) {
+      if (err) callback(err);
+      return decreaseApplicationPostCount(userId, callback);
     }
   );
 };
 var decreaseApplicationPostCount = function (userID, callback) {
-    db.query(
-        "UPDATE MyDatabase.JobSeeker SET numberJobsApplied = numberJobsApplied - 1 WHERE userId = ?",
-        [userID],
-        function (err) {
-            if (err) {
-                return callback(err);
-            }
-            // Successful
-            return callback(null);
-        }
-    );
+  db.query(
+    "UPDATE pyc353_1.JobSeeker SET numberJobsApplied = numberJobsApplied - 1 WHERE userId = ?",
+    [userID],
+    function (err) {
+      if (err) {
+        return callback(err);
+      }
+      // Successful
+      return callback(null);
+    }
+  );
 };
 var getApplications = function (applicationId, callback) {
   db.query(
-    "SELECT numberEmployeesNeeded,jobs.jobId FROM MyDatabase.applications, MyDatabase.jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
+    "SELECT numberEmployeesNeeded,jobs.jobId FROM pyc353_1.applications, pyc353_1.jobs WHERE applicationId = ? AND applications.jobId = jobs.jobId",
     [applicationId],
     function (err, rows) {
       if (err) return callback(err);
@@ -167,7 +165,7 @@ var getApplications = function (applicationId, callback) {
 
 var offerSent = function (applicationId, callback) {
   db.query(
-    "UPDATE MyDatabase.applications SET status = 'Offer Sent' WHERE applicationId = ?",
+    "UPDATE pyc353_1.applications SET status = 'Offer Sent' WHERE applicationId = ?",
     [applicationId],
     function (err, rows) {
       if (err) return callback(err);
@@ -178,7 +176,7 @@ var offerSent = function (applicationId, callback) {
 
 var takeSpot = function (jobId, callback) {
   db.query(
-    "UPDATE MyDatabase.jobs SET numberEmployeesNeeded = numberEmployeesNeeded - 1 WHERE jobId = ?",
+    "UPDATE pyc353_1.jobs SET numberEmployeesNeeded = numberEmployeesNeeded - 1 WHERE jobId = ?",
     [jobId],
     function (err, rows) {
       if (err) return callback(err);
@@ -189,7 +187,7 @@ var takeSpot = function (jobId, callback) {
 
 var declineOthers = function (applicationId, jobId, callback) {
   db.query(
-    "UPDATE MyDatabase.applications SET status = 'Candidacy not considered' WHERE applicationId != ? AND applications.jobId = ? ",
+    "UPDATE pyc353_1.applications SET status = 'Candidacy not considered' WHERE applicationId != ? AND applications.jobId = ? ",
     [applicationId, jobId],
     function (err, rows) {
       if (err) return callback(err);
@@ -200,7 +198,7 @@ var declineOthers = function (applicationId, jobId, callback) {
 
 var declineApplication = function (applicationId, callback) {
   db.query(
-    "UPDATE MyDatabase.applications SET status = 'Candidacy not considered' WHERE applicationId = ?",
+    "UPDATE pyc353_1.applications SET status = 'Candidacy not considered' WHERE applicationId = ?",
     [applicationId],
     function (err, rows) {
       if (err) return callback(err);
