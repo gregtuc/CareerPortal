@@ -1,4 +1,4 @@
-CareerPortal is an application made with MoreWaqar, samilmehedi, theNafsters, and WoodPeaker. Created using Express.js, Handlebars.js, and MySQL, this application allows both employers to create an account, create job postings, manage applications, and more. Users can sign up and apply to these jobs as well. Included is an administrative dashboard, payment packages that unlock additional features for users and employers alike, job-search functionality, an explore page for easy job-browsing, and more!
+CareerPortal is an application made with MoreWaqar, samilmehedi, theNafsters, and WoodPeaker. Created using Express.js, Handlebars.js, and MySQL, this application allows employers to create an account, create job postings, manage applications, and more. Users can sign up and apply to these jobs as well. Included is an administrative dashboard, payment packages that unlock additional features for users and employers alike, job-search functionality, an explore page for easy job-browsing, and more!
 
 Quick Start Guide with MySQL 8.0:
 
