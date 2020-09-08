@@ -14,7 +14,7 @@ module.exports = function (passport) {
 
   passport.deserializeUser(function (userId, done) {
     db.query(
-      "SELECT * FROM pyc353_1.users WHERE userId = ?",
+      "SELECT * FROM MyDatabase.users WHERE userId = ?",
       [userId],
       function (err, rows) {
         done(err, rows[0]);

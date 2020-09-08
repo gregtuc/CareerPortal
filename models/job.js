@@ -45,7 +45,7 @@ var createJob = function (
     jobCategory: jobCategory,
   };
   db.query(
-    "INSERT INTO pyc353_1.jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
+    "INSERT INTO MyDatabase.jobs ( jobId, employerId, jobTitle, description, numberEmployeesNeeded,status,jobCategory) values (?,?,?,?,?,?,?)",
     [
       newJob.jobId,
       newJob.userId,
@@ -72,7 +72,7 @@ var createJob = function (
 
 var updateRecruiterPostCount = function (newJob, callback) {
   db.query(
-    "UPDATE pyc353_1.Recruiter SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
+    "UPDATE MyDatabase.Recruiter SET jobPostedCount = jobPostedCount + 1 WHERE userId = ?",
     [newJob.userId],
     function (err) {
       if (err) {
@@ -88,7 +88,7 @@ var updateRecruiterPostCount = function (newJob, callback) {
 // callback(err, users)
 var listJobSearched = function (jobTitle, callback) {
   db.query(
-    "SELECT * FROM pyc353_1.jobs WHERE jobTitle = ?",
+    "SELECT * FROM MyDatabase.jobs WHERE jobTitle = ?",
     [jobTitle],
     function (err, rows) {
       if (err) return callback(err);
@@ -99,7 +99,7 @@ var listJobSearched = function (jobTitle, callback) {
 
 var listJobSearchedByCategory = function (jobCategory, callback) {
   db.query(
-    "SELECT * FROM pyc353_1.jobs WHERE jobCategory = ?",
+    "SELECT * FROM MyDatabase.jobs WHERE jobCategory = ?",
     [jobCategory],
     function (err, rows) {
       if (err) return callback(err);
@@ -112,7 +112,7 @@ var listJobSearchedByCategory = function (jobCategory, callback) {
 // callback(err, users)
 var listMatchingJobs = function (userId, callback) {
   db.query(
-    "SELECT * FROM pyc353_1.jobs WHERE employerId = ?",
+    "SELECT * FROM MyDatabase.jobs WHERE employerId = ?",
     [userId],
     function (err, rows) {
       if (err) return callback(err);
@@ -124,7 +124,7 @@ var listMatchingJobs = function (userId, callback) {
 // List all jobs
 // callback(err, jobs)
 var listJobs = function (callback) {
-  db.query("SELECT * FROM pyc353_1.jobs", [], function (err, rows) {
+  db.query("SELECT * FROM MyDatabase.jobs", [], function (err, rows) {
     if (err) return callback(err);
 
     return callback(null, rows);
@@ -134,14 +134,14 @@ var listJobs = function (callback) {
 // Delete a job
 // callback(err)
 var deleteJob = function (jobId, callback) {
-  db.query("DELETE FROM pyc353_1.jobs WHERE jobId = ?", [jobId], callback);
+  db.query("DELETE FROM MyDatabase.jobs WHERE jobId = ?", [jobId], callback);
 };
 
 var updateStatus = function (jobId, status, callback) {
   if (status === "Active") var newStatus = "Inactive";
   else var newStatus = "Active";
   db.query(
-    "UPDATE pyc353_1.jobs SET status= ? WHERE jobId=?",
+    "UPDATE MyDatabase.jobs SET status= ? WHERE jobId=?",
     [newStatus, jobId],
     callback
   );

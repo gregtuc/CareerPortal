@@ -2,9 +2,9 @@
 module.exports = {
   connection: {
     host: "localhost",
-    user: "pyc353_1",
-    password: "datab123",
-    port: 12000,
+    user: "root",
+    password: "password",
+    port: 3306,
   },
-  database: "pyc353_1",
+  database: "MyDatabase",
 };
