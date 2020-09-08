@@ -1,5 +1,7 @@
 CareerPortal is an application made with MoreWaqar, samilmehedi, theNafsters, and WoodPeaker. Created using Express.js, Handlebars.js, and MySQL, this application allows employers to create an account, create job postings, manage applications, and more. Users can sign up and apply to these jobs as well. Included is an administrative dashboard, payment packages that unlock additional features for users and employers alike, job-search functionality, an explore page for easy job-browsing, and more!
 
+Passport.js was used for ensuring a secure session, and bcrypt for safe storage of account information in MySQL. This version of the project is new and was made in a "hackathon" manor. Moving forward, project files may be refined to be made more modular.
+
 Quick Start Guide with MySQL 8.0:
 
 1. In your command window, use "npm install" to install dependencies. Be sure to audit any modules that require updated versions.
